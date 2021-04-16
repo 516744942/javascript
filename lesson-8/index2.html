@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+
+<body>
+
+
+
+</body>
+<script>
+    //  数据属性和访问器属性 
+    let person = {
+        name: "Nicholas"
+    }
+    Object.defineProperty(person, "name", {
+        configurable: false, //是否可以删除
+        writable: true, // 是否可以被修改
+        value: "123", // 默认undefined
+        enumerable: false, // 是否可以通过for-in循环返回
+    })
+    person.name = 212312
+    delete person.name
+    for (const key in person) {
+        console.log(person)
+        console.log(key)
+    }
+</script>
+<script>
+    // 访问器属性 
+    let book = {
+        year_: 2017,
+        edition: 11,
+    };
+    Object.defineProperty(book, "year", {
+        get() {
+            return this.year_
+        },
+        set(newValue) {
+            if (newValue > 2017) {
+                this.year_ = newValue
+                this.edition = newValue - 2010
+            }
+        }
+    });
+    book.year = 2018
+        // console.log(book);
+</script>
+
+<script>
+    let book1 = {};
+    Object.defineProperties(book1, {
+        year_: {
+            value: 2080
+        },
+        edition: {
+            value: 1
+        },
+        year: {
+            get() {
+                return this.year_;
+            },
+            set(newValue) {
+                // console.log('newValue', newValue)
+                if (newValue > 2017) {
+                    this.year_ = newValue
+                    this.edition = newValue - 1
+                }
+                console.log('this.edition', this.edition)
+            }
+        }
+    });
+    // book1.year = 2090;
+    console.log(Object.getOwnPropertyDescriptors(book1));
+    console.log(book1.propertyIsEnumerable())
+        // 
+    Object.assign({}, {});
+</script>
+
+</html>

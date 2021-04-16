@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+
+<body>
+
+
+</body>
+<script>
+    // 1
+    let person = new Object();
+    person.name = "Nicholas"
+    person.age = "14"
+    person.job = "software Engineer"
+    person.sayName = function(params) {
+            console.log(this)
+            console.log(this.name)
+        }
+        // console.log(person)
+    person.sayName()
+
+    // 2
+    let perosn1 = {
+        name: "Nicholas",
+        age: "24",
+        job: "software Engineer",
+        sayName: function(params) {
+            console.log(this)
+            console.log(this.name)
+        }
+    }
+</script>
+
+</html>
