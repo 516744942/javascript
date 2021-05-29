@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>作用域、变量和上下文</title>
+</head>
+
+<body>
+    <script>
+        /**
+         * js 赋值的时候 必须确定 这个值是 原始值 还是引用值   
+         * 操作的就是存储在变量中的实际值
+         * 引用值值保存在内存中的对象上
+         * js 不允许直接访问内存的位置
+         * 不能直接操作对象所在的内存空间
+         * 引用值的变量是按引用访问的   
+         */
+    </script>
+
+    <script>
+        /**
+         * 动态属性
+         * 引用值才可以动态添加后面可以使用的属性 
+         * 如果使用new 关键词,则使用JavaScript会创建一个Object
+         * 
+         * 
+         */
+    </script>
+
+    <script>
+        /**
+         * 复制值 
+         * 原始值 num1和num2 完全独立,独立使用,互不干扰
+         *
+         * 引用值 复制实际上是一个指针 它指向存储在堆内存中的对象
+         * 实际指向同一个对象
+         * 反应了 变量和堆内存中对象之间的关系
+         */
+        let num1 = 5
+        let num2 = num1
+        num1 = 6
+        console.log(num1)
+        console.log(num2)
+
+        let obj1 = new Object()
+        let obj2 = obj1;
+        console.log(obj2)
+        obj1.name = '嘻嘻哈哈';
+        console.log(obj2)
+    </script>
+
+    <script>
+        /**
+         *  传递参数
+         *  函数的参数都是按值传递
+         *  函数外的值都被复制到函数内部的参数中
+         *  如果是原始,和原始值一样, 引用值和引用值一样
+         *  参数只有按值传递
+         *  按值传递参数时,值会复制到一个局部变量(就是argument的一个槽位)
+         *  不会影响外部的原始变量count num和count互补干扰
+         */
+        function addTen(num) {
+            num += 10;
+            return num
+        }
+        let count = 20;
+        let result = addTen(count);
+        console.log(count) //20 没有变化 
+        console.log(result) //30 
+            // 如果是对象
+            /**
+             *  obj和person 指向同一个对象,对象进行按值传进函数,obj也会通过引用访问对象
+             *  因为obj 指向的对象保存在全局作用域上
+             */
+        function setName(obj) {
+            obj.name = "Nicholas";
+            // obj = new Object();
+            // obj.name = "Greg"
+        }
+        let person = new Object(); // 在全局作用域的堆内存上
+        setName(person);
+        console.log(person.name)
+
+        /**
+         * 证明了不是引用传指的,是按值传递的
+         * 内存堆没有变化,因为是一个指向本地对象的指针
+         * 它变成了一个指向本地对象的指针,而那个对象在函数执行结束时就被销毁了
+         * 
+         */
+        function setName2(obj) {
+            obj.name = "Nicholas";
+            obj = new Object();
+            obj.name = "Greg"
+            console.log(obj);
+        }
+        let person2 = new Object(); // 在全局作用域的堆内存上
+        setName2(person);
+        console.log(person.name)
+    </script>
+
+    <script>
+        /**
+         * 确定类型
+         *  typeof  是否是原始值   引用值和null typeof 是object
+         *  什么类型的对象 instanceof 操作符
+         *  语法  result  =  variable instanceof  constructor
+         *  原型链决定 
+         *  所有的引用值都是Object
+         */
+        let obj = {}
+        let arr = []
+        let pattern = /^123$123/
+        console.log(obj instanceof Object) // true
+        console.log(arr instanceof Object) // true
+        console.log(arr instanceof Array) // true
+        console.log(pattern instanceof RegExp); // true
+    </script>
+
+    <script>
+        /**
+         * 执行上下文与作用域
+         * 执行上下文(上下文)
+         * 变量或函数的上下文决定了它们可以访问哪些 数据
+         * 每一个上下文都有一个关联的变量对象
+         * 包括定义在它上面的所有变量和函数
+         *  let
+         */
+    </script>
+
+    <script>
+        /**
+         *  局部变量sum 
+         */
+        function add(num1, num2) {
+            var sum = num1 + num2
+            return sum
+        }
+        let result1 = add(10, 20);
+        console.log(sum);
+    </script>
+    <script>
+        /**
+         * 如果省略上面列子中的关键词var
+         * sum在调用之后被添加到了全局上下文,在函数推出之后依然存在,从而在后面可以访问到
+         */
+        function add(num1, num2) {
+            sum = num1 + num2
+            return sum
+        }
+        let result2 = add(10, 20);
+        console.log(sum);
+    </script>
+
+    <script>
+        /**
+         * let的块级作用域 在一个 花括号{}界内
+         * 一个块级作用域不能申明两次
+         * 适合在迭代变量里面,不会泄露到循环的外部
+         * 暂时性死区,不能再声明前使用
+         */
+    </script>
+
+    <script>
+        /**
+         * const 不能被重新赋值为其他的引用值
+         *  但是对象的键不受限制
+         *  不想被改变可以使用 Object.freeze() ,不会报错,但是静默失败
+         */
+        const o3 = Object.freeze({})
+        o3.name = "Jake";
+        console.log(o3)
+        console.log(o3.name)
+    </script>
+    <script>
+        /**
+         * 
+         */
+        function ATem() {
+            this.title = "show Name"
+            this.author = 'jake'
+        }
+        let a1 = new ATem()
+        let a2 = new ATem('name11')
+            // console.log(a1, a2);
+            // console.log(a1.getOwnPropertyNam);
+        console.log(Object.getOwnPropertyNames(a1))
+        a2.author = null;
+        console.log(a1, a2);
+    </script>
+
+</body>
+
+</html>

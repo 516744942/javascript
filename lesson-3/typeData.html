@@ -1,0 +1,271 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+
+<body>
+    <script>
+        /**
+         *  简单数据类型(原始类型) Undefined,Null,Boolean,Number,String和Symbol
+         *  复杂数据类型 Object
+         *  操作符 typeof
+         */
+        console.log(typeof undefined)
+        console.log(typeof null) // 特殊null 是对空对象的引用
+        console.log(typeof true)
+        console.log(typeof '1123')
+        console.log(typeof 1123)
+        console.log(typeof Symbol('123'))
+        console.log(typeof
+            function name(params) {
+
+            })
+
+        console.log(typeof {
+            a: 1,
+            b: 2
+        })
+    </script>
+    <script>
+        /**
+         * undefined
+         */
+        let message;
+        // let age;
+        console.log(message)
+        console.log(typeof age === 'undefined')
+    </script>
+    <script>
+        /**
+         * undefined
+         */
+        let message1;
+        if (message1) {
+            console.log(1)
+        }
+        if (!message1) {
+            console.log(2)
+        }
+        if (age2) {
+            console.log(age)
+        }
+        console.log(123131)
+    </script>
+    <script>
+        /**
+         *  null
+         *  逻辑上,null值表示一个空对象指针
+         *  typeof null 为object的原因
+         *  将要保存的对象值的变量时,建议使用null来初始化
+         */
+        let car = null
+        console.log(typeof car)
+        console.log(null == undefined);
+    </script>
+    <script>
+        /**
+         *  Boolean 类型
+         *  Boolean() 转换函数
+         */
+        let message2 = "Hello world!"
+        let messageAsBoolean = Boolean(message2)
+        console.log(messageAsBoolean);
+        console.log(Boolean({}));
+        console.log(Boolean(null));
+        console.log(typeof Boolean(null));
+        /**
+         *  Boolean  true    false
+         *  String   非空字符串    ""
+         *  Number   非零数值(包括无穷值)    "0、NaN"
+         *  Object   任意对象    "null"
+         *  Undefined   不村子    undefined
+         *  if等控流程语句会自动执行其他类型值 到布尔值的转换
+         *  
+         */
+    </script>
+    <script>
+        /**
+         *  Number类型
+         *  八进制字面量 第一个数字必须是0,然后 数值是(0~7)
+         *  十六进制 0x(区分大小写)  数值(0～9以及A～F)
+         */
+        console.log(071)
+        console.log(0x12)
+    </script>
+    <script>
+        /**
+         *  浮点值
+         *  有小数
+         *  浮点值使用的内存空间是储存 整数值的两倍,所以想办法把值转换为整数
+         *  科学计数法   3.12e7
+         */
+        console.log(1.1)
+        console.log(0.1)
+        console.log(.1) // 有效,但是不推荐
+        console.log(3.12e7) // 3.12 *107次幂
+        console.log(0.0000000000003) //
+        console.log(3e-13) //
+        console.log(0.1 + 0.2) // 0.30000000000000004  永远不要测试某个特定的浮点值
+            /**
+             *  值的范围
+             */
+    </script>
+    <script>
+        /**
+         *  isFinite是否是有限大
+         */
+        console.log(Number.MIN_VALUE)
+        console.log(Number.MAX_VALUE)
+        let result = Number.MIN_VALUE + Number.MAX_VALUE
+        console.log('isFinite', isFinite(result));
+    </script>
+    <script>
+        /**
+         *  NaN
+         *  isNaN()  可以是任意的数据类型
+         */
+        console.log(0 / 0) //NaN
+        console.log(-0 / 0) //NaN
+        console.log(5 / 0) //Infinity
+        console.log(-5 / 0) //-Infinity
+        console.log(NaN / 10) //NaN
+        console.log(NaN === NaN) //false
+        console.log(isNaN(0 / 0)) // true
+        console.log(isNaN(5 / 0)) // fa,se
+        console.log(isNaN(true)) // 可以转换为1 false
+        console.log('123Bul', isNaN('123Bul')) // 不可以转换 true
+        console.log(isNaN('123')) // 可以转换为123 false
+    </script>
+    <script>
+        /** 
+         *  数值转换
+         *  Number()
+         *  parseInt(,(8||16||10||32)) // 8进制 16进制 
+         *  parseFloat() 16进制始终会返回0  只能解析十进制  因此不能指定底数
+         */
+        console.log(Number(true)) //1
+        console.log(Number(false)) //0
+        console.log(Number(null)) //0
+        console.log(Number(undefined)) //0
+        console.log(Number("123")) //123
+        console.log(Number("011")) //123
+        console.log(Number("1.1")) //123
+        console.log(Number(" ")) //123
+        console.log(Number("asd123as")) //123
+
+        console.log(parseInt('123as')) //123
+        console.log(parseInt('11110', 2))
+        console.log(parseInt(0x77)) //123
+    </script>
+
+    <script>
+        /**
+         * String 类型 ('',"",``)
+         * length 字符串长度
+         * 
+         */
+        console.log('\'');
+    </script>
+    <script>
+        /**
+         *  特点 
+         *  immutable 不可变的
+         *  必须销毁原始的字符串,然后将包含新值的另一个字符串保存到该变量
+         *  早期慢的原因
+         */
+        let lang = "Java";
+        lang = lang + "Script";
+        console.log('lang', lang)
+    </script>
+    <script>
+        /**
+         *  转换字符串
+         *  toString() 一个参数 二进制 八进制 十六进制  默认十进制
+         *  字符串的toString 返回一个自身的副本
+         *  null和undefined没有 toString()方法
+         */
+        let ageNumber = 11
+        let ageNumber2 = 16
+        let ageString = ageNumber.toString() // '11'
+        let found = true;
+        let foundAsString = found.toString(); // 'true'
+        console.log(ageString, foundAsString)
+        console.log(ageNumber.toString(2))
+        console.log('ageNumber', ageNumber)
+        console.log(ageNumber.toString(8))
+        console.log(ageNumber.toString(16))
+        console.log(ageNumber.toString(32))
+        console.log(ageNumber2.toString(16))
+    </script>
+    <script>
+        /**
+         *  模版字面量
+         *  保留了跨换 定义字符串
+         *  
+         */
+        let pageHTML = `
+         <div>
+            <a href="#">
+              <span>Jake</span>
+            </a>
+          </div>
+        `
+        console.log(pageHTML);
+    </script>
+    <script>
+        /**
+         *  字符串插值
+         *  字符串插值 ${  }
+         */
+        let foo = {
+            toString: () => 'World'
+        };
+        console.log(`Hello,${foo}`)
+    </script>
+
+    <script>
+        /**
+         *  模版字面量 标签函数
+         *   参数是可变的 所以最好用剩余操作符  
+         *  function simpleTag(string,...expression){
+         *    console.log(string);
+         *    for(const expression of expressions){
+         *     console.log(expression)
+         *   }
+         *  }
+         */
+        let a = 6;
+        let b = 9;
+        //  ["", "+", " =", ""]
+        // function simpleTag(string, aValExpression, bValExpression, sumExpression) {
+        //     console.log(string)
+        //     console.log(aValExpression)
+        //     console.log(bValExpression)
+        //     console.log(sumExpression)
+        //     return 'foobar'
+        // }
+
+        function simpleTag(string, ...expressions) {
+            console.log(string)
+            console.log(string.raw)
+            console.log(expressions)
+            for (const expression of expressions) {
+                console.log(expression)
+            }
+        }
+        let untaggedResult = `${a} +${b} = ${a+b}`;
+        let taggedResult = simpleTag `${a}+${b} =${a+b}`;
+        console.log(untaggedResult)
+        console.log(taggedResult)
+    </script>
+
+
+
+</body>
+
+</html>

@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+
+<body>
+
+    <!-- var 申明的作用域 -->
+    <script>
+        // 使用var 操作符定义的变量会成为包含他的函数的局部变量
+        // 比如var 在一个函数内部定义一个变量,就意味着该变量将在函数退出时被销毁
+
+        function test() {
+            var message = "hi"; // 局部变量
+        }
+        test();
+        //  test在调用之后变量随即被销毁
+        console.log(message); //所以报错 ReferenceError: message is not defined
+    </script>
+    <script>
+        /**
+         *  去掉var 意味着变成全局变量
+         */
+        function test() {
+            message = "hi"; // 局部变量
+        }
+        test();
+        console.log(message);
+        console.log(window.message);
+        /**
+         *  局部作用域中定义的全局变量不好维护,也会造成困惑  
+         */
+    </script>
+    <script>
+        /**
+         *  ECMAScript 是松散类型的
+         */
+        var message = 'hi',
+            found = false,
+            age = 29;
+    </script>
+
+
+    <!-- var 声明提升 -->
+    <script>
+        /**
+         *  不会报错的原因, 关键词var 申明的变量会自动提升到函数作用域顶部
+         */
+        function foo() {
+            console.log(age)
+            var age = 26;
+        }
+        foo()
+            /**
+             *  相当于
+             */
+        function foo1(params) {
+            var age;
+            console.log(age);
+            age = 26;
+        }
+        foo1()
+
+        /**
+         *  重复反复多次使用var声明 同一个变量没有问题
+         */
+        function foo2() {
+            var age = 16;
+            console.log(age)
+            var age = 26;
+            console.log(age)
+            var age = 36;
+            console.log(age)
+        }
+        foo2()
+    </script>
+</body>
+
+</html>

@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>原始值包装类型</title>
+</head>
+
+<body>
+
+    <script>
+        /**
+         * Boolean、Number和string
+         * 创建原始值的时候 都会创建一个原始包装类型的对象
+         * 从而操作原始值的各种方法
+         * 创建一个 String类型的实例  let s1 = new String("some text")
+         * 调用实例上的特定方法        let s2 = s1.subString(2)
+         * 销毁实例                  s1 = null
+         */
+        let s1 = 'some text';
+        let s2 = s1.substring(2);
+        console.log(s1)
+        console.log(s2)
+    </script>
+    <script>
+        /**
+         *  
+         * 
+         */
+        let obj = new Object('some text');
+        let obj1 = new Object(23);
+
+        console.log(obj instanceof String);
+        console.log(typeof obj);
+        console.log(typeof obj1);
+        console.log(obj instanceof Number);
+    </script>
+    <script>
+        /**
+         * Number是对应数值的引用类型
+         * toFixed(2) 10.00
+         * toExponential //科学计数法(也称为指数计数法) 接受一个参数表示 小数位数
+         * toPrecision   // 精密度  会四舍五入
+         */
+        let num = 10;
+        console.log(num.toString()) //"10"
+        console.log(num.toString(2)) // "1010"
+        console.log(num.toString(8)) // 12
+        console.log(num.toString(10)) // 10
+        console.log(num.toString(16)) // a
+        console.log(num.toExponential(10)) // 1.0000000000e+1
+        let num1 = 235
+        console.log(num1.toPrecision(2)); //  2.4e+2  //
+    </script>
+    <script>
+        /**
+         *  isInteger()方法 与安全整数
+         *  数值是否保存为整数
+         */
+        console.log(Number.isInteger(1)) // true
+        console.log(Number.isInteger(1.00)) // true
+        console.log(Number.isInteger(1.01)) // false
+        console.log(Number.isInteger(0.1 + 0.9)) // false
+        console.log(Number.isInteger(0.1 + 0.4)) // false
+    </script>
+    <script>
+        /**
+         * String 是字符串的引用类型 
+         * 中文是2个字节 因为是1个字节 但是 他们都是一个字符
+         * length 表示字符串包含多少 16位源码
+         * charAt(0)  返回给定索引字符置的字符
+         * charCodeAt 查看指定码元的字符编码 码元
+         * 两个16位码元 策略成为代理对 比如表情包
+         */
+        let stringObject = new String('hello world');
+        console.log(stringObject)
+            //0: "h"
+            // 1: "e"
+            // 2: "l"
+            // 3: "l"
+            // 4: "o"
+            // 5: " "
+            // 6: "w"
+            // 7: "o"
+            // 8: "r"
+            // 9: "l"
+            // 10: "d"
+        console.log(typeof stringObject) // object
+        let stringObject1 = new String('你好吗');
+        console.log('你好吗', stringObject1.length)
+        console.log(stringObject.charAt(0));
+        console.log(stringObject.charCodeAt(0)); //104
+        console.log(stringObject.codePointAt(0)); //104 兼容表情包为了完整 要codePointAt代替 charCodeAt
+        console.log(String.fromCharCode(97, 98, 99)); //abc
+        let message1 = "😊ab😊😊😊"
+        console.log(message1.codePointAt(0)); //128522 兼容表情包为了完整 要codePointAt代替 charCodeAt
+        console.log(message1.codePointAt(1)); //56842 索引0和1被看成一个代理对
+        console.log(String.fromCodePoint(128522)); //abc 😊
+        /**
+         * concat() 
+         * 用于字符串拼接  更为常见的就是+
+         * slice substr  substring 
+         * substring 会把所有的负参数 转换为0
+         * slice substr  负参数 +长度
+         */
+        let sq = "hello ";
+        let se = " world";
+        let res = sq.concat(se);
+        console.log(res)
+        let stringValue = 'hello world';
+        let stringValue1 = stringValue.slice(3, 7); //lo w
+        let stringValue2 = stringValue.slice(3, -1); // lo world
+        let stringValue3 = stringValue.substring(-4); // hello world  
+        let stringValue4 = stringValue.substr(1, -1); //
+
+        console.log(stringValue1)
+        console.log(stringValue2)
+        console.log(stringValue3)
+        console.log(stringValue4)
+            /**
+             * 字符串位置方法
+             * indexOf  和lastIndexOf 
+             * 第二个参数 位置 indexOf 从前往后
+             * 第二个参数 位置 和lastIndexOf 从后往前
+             * 
+             */
+        let stringValue111 = "hello world";
+        console.log(stringValue111.indexOf("o", 6)) //7
+        console.log(stringValue111.lastIndexOf("o", 6)) //4
+            /**
+             * 字符串包含
+             *  startWith()、endsWith()和 includes()
+             *  startWith、includes 表示开始搜索的位置
+             */
+        let message = 'foobarbaz';
+        console.log(message.startsWith('foo')) // true
+        console.log(message.startsWith('baz')) // false
+        console.log(message.endsWith('foo')) // false
+        console.log(message.endsWith('baz', 5)) // false
+        console.log(message.includes('oba', 5)) // false
+            /**
+             *  trim()方法
+             *  删除前后所有的空白符
+             *  repeat()方法 接受一个整体参数  表示要复制多少次
+             * 
+             */
+        let a = "fgh"
+        console.log(a.repeat(33))
+            /**
+             * padStart()和padEnd()
+             * 第一个参数是长度 第二个参数是填充字符
+             * 
+             * 
+             */
+        let padString = 'foo'
+        let pad1 = padString.padStart(9, 'abcf'); //左边填充bbb 直到9个
+        let pad2 = padString.padEnd(9, 'abcf'); //左边填充bbb 直到9个
+        console.log(pad1) // abcfabfoo
+        console.log(pad2) // fooabcfab
+            /**
+             *  字符串迭代 iterator
+             * for fo 循环
+             *  所以就可以结构解析了
+             */
+        let strIterator = "abc";
+        let stringIterator = strIterator[Symbol.iterator]();
+        console.log(stringIterator.next()); // {value: "a", done: false}
+        console.log(stringIterator.next()); // {value: "b", done: false}
+        console.log(stringIterator.next()); //{value: "c", done: false}
+        console.log([...strIterator])
+            /**
+             * toLowerCase()
+             * toLocaleUpperCase()
+             * toLowerCase()
+             * toUpperCase()
+             */
+            /**
+             * 字符串模式匹配方法
+             * match()
+             * search() //第一个匹配的字符位置
+             * replace(RegExp或者一个字符串,字符串或者一个函数)  //
+             * 
+             */
+        let text = "cat,bar,sat,fat";
+        let pattern = /.at/g;
+        let pattern2 = /.aa/g;
+        let matches = text.match(pattern)
+        let matches2 = text.match(pattern2)
+        console.log('matches', matches); //["cat", "sat", "fat"]
+        console.log('matches2', matches2); //null
+        let searches = text.search(/ar/);
+        console.log('searches', searches) //5
+            /**
+             *  replace(RegExp或者一个字符串,字符串或者一个函数)
+             * 
+             */
+        let text2 = "cat, baa, sat, fat";
+        let result = text.replace('at', 'ond');
+        console.log('result', result) //cond,bar,sat,fat
+        let result22 = text.replace(/at/g, 'ond');
+        console.log(result22) //cond,bar,sond,fond
+        let result23 = text.replace(/(.at)/g, 'word ($1)'); //word (cat),bar,word (sat),word (fat)
+        console.log('result23', result23)
+            /**
+             * split(",")  // 字符串变成数组
+             * localeCompare()方法   1在前  0 -1在后
+             */
+    </script>
+</body>
+
+</html>

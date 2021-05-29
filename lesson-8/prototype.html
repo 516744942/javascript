@@ -1,0 +1,517 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>原型模式(prototype)</title>
+</head>
+
+<body>
+
+    <script>
+        /**
+         * 每个函数都会创建一个prototype属性,
+         * 这个属性是一个对象
+         * 包含应该由特定引用类型的实例共享的属性和方法
+         */
+        function Person() {};
+        // let Person = function () {}
+        Person.prototype.name = "Nicholas";
+        Person.prototype.age = 29;
+        Person.prototype.job = "software Engineer";
+        Person.prototype.sayName = function() {
+            console.log(this.name)
+        }
+        let person1 = new Person();
+        person1.sayName();
+        let person2 = new Person();
+        person2.sayName();
+        console.log('Person', Person) //Person ƒ Person() {}
+        console.log('Person', Person.constructor) //Person ƒ Function() { [native code] }
+        console.log('Person', Person.prototype) //age: 29 job: "software Engineer" name: "Nicholas" sayName: ƒ ()
+        console.log(person1.sayName === person2.sayName); //true
+    </script>
+    <script>
+        /**
+         * 1 理解原型
+         * 只要创建一个函数,就会按着特定的规则认为这个函数创建一个prototype属性(指向原型)
+         * 构造函数体中什么也没有
+         * 新对象仍然拥有相应的属性和方法
+         * 原型模式的定义的属性和方法是所有的实例共享的
+         * 原型自动获取一个constructor的属性
+         * Person.prototype.constructor 指向Person
+         * 实例会会暴露在__proto__属性
+         * 
+         */
+        function Person1() {
+
+        }
+        let Person2 = function() {
+
+        }
+        console.log(typeof Person1.prototype) // object
+        console.log(Person2.prototype) // object //{constructor: ƒ}constructor: ƒ ()__proto__: Object
+        console.log(Person1.prototype.__proto__ === Object.prototype) //true 正常原型链都会终止于Object的原型对象
+        console.log(Person1.prototype.__proto__.constructor === Object) //true 正常原型链都会终止于Object的原型对象
+        console.log(Person1.prototype.__proto__.__proto__); //true 正常原型链都会终止于Object的原型对象
+        console.log(Person1.__proto__ === Person2.__proto__); //true 共享同一个原型
+    </script>
+    <script>
+        /**
+         * 通过__proto__链到原型对象
+         * person1和person2的____proto__链到原型对象
+         * 链到原型对象的constructor 指向构造函数
+         * 构造函数的 prototype指向__proto__
+         * 可以isPrototypeOf方法确定两个对象之间的关系
+         * 
+         */
+        let state1 = Person.prototype.isPrototypeOf(person1)
+        let state2 = Person.prototype.isPrototypeOf(person2)
+        console.log('state1', state1); // true // 有链接指向原型
+        console.log('state2', state2); //  true //  有链接指向圆型
+        console.log(Object.getPrototypeOf(person1)) //返回内部参数 [[Prototype]]
+            /**
+             * age: 29
+             * job: "software Engineer"
+             * name: "Nicholas"
+             * sayName: ƒ ()
+             */
+    </script>
+    <script>
+        /**
+         *  setPrototypeOf()方法
+         *  重写一个对象的原型继承关系 //要避免使用,可能造成性能下降
+         */
+        let biped = {
+            nameLegs: 2
+        };
+        let person = {
+            name: 'Matt'
+        }
+        Object.setPrototypeOf(person, biped)
+        console.log(person.nameLegs) //2
+        console.log(person.__proto__) // {nameLegs: 2}
+        Object.setPrototypeOf(person, biped);
+        console.log(Object.getPrototypeOf(person) === biped) //true 同一个对象
+    </script>
+    <script>
+        /**
+         *  建议使用Object.create()来创建
+         * 
+         */
+        let biped1 = {
+            numLegs: "2"
+        };
+        let person11 = Object.create(biped1);
+        person11.name = 'Matt';
+        console.log(person11) //{name: "Matt"}
+        console.log(person11.__proto__) //{numLegs: "2"}
+        console.log(Object.getPrototypeOf(person11)) //true 同一个对象
+        console.log(Object.getPrototypeOf(person11) === biped1) //true 同一个对象
+    </script>
+    <script>
+        /**
+         * 原型层级
+         * 实例->原型
+         * 属性会遮蔽原型对象上的同名属性,遮蔽他的访问
+         * delete 可以完全可以删除实例上的这个属性,从而让标识符解析过程能够继续搜索原型对象
+         * hasOwnProperty可以清楚的看到访问的实例是实例还是原型属性
+         */
+        let person3 = new Person();
+        person3.name = "测试";
+        person3.value = "测试内容";
+        console.log(person3); // 实例上的name
+        console.log(person3.hasOwnProperty('name')) //true  来自实例
+        delete person3.name;
+
+        console.log(Object.getPrototypeOf(person3)); // 
+        // age: 29
+        // job: "software Engineer"
+        // name: "Nicholas
+        console.log(person3.name); //Nicholas 原型上的name
+        console.log(person3.hasOwnProperty('name')) //false
+            /**
+             * configurable: true
+             * enumerable: true
+             * value: "测试内容"
+             * writable: true
+             */
+        console.log('object', Object.getOwnPropertyDescriptor(person3, 'value'))
+            /**
+             * configurable: true
+             * enumerable: true
+             * value: "Nicholas"
+             * writable: true
+             */
+        console.log('object11', Object.getOwnPropertyDescriptor(person3.__proto__, 'name'))
+    </script>
+    <script>
+        /**
+         * 原型和in操作符
+         * 使用方法
+         * for in循环使用 
+         * 无论在实例还是在原型上我
+         * 
+         */
+        let person4 = new Person();
+        console.log('inininin inininininininininininin inininininininininininin inininininininin')
+        console.log('name' in person4) //true
+        console.log(person4.hasOwnProperty('name')) // 上面是true false 说明是一个原型属性
+            // console.log(hasPrototypeProperty(person4, 'name'))
+            // console.log(hasPrototypeProperty(person4, "c"))
+            /**
+             * Object.keys 接受一个对象,返回这个对象所有的可枚举属性名称的字符串数组
+             * 不论是否枚举 getOwnPropertyNames()
+             */
+        let keysA1 = Object.keys(Person.prototype); //["name", "age", "job", "sayName"]
+        let keysA2 = Object.keys(person4); //["name", "age", "job", "sayName"]
+        console.log('keys1', keysA1)
+        console.log('keys1', keysA2) // []
+
+        /**
+         * configurable: true
+         * enumerable: false
+         * value: ƒ Person()
+         * writable: true
+         */
+        console.log('object11', Object.getOwnPropertyDescriptor(Person.prototype, 'constructor'))
+
+        console.log('getOwnPropertyNames', Object.getOwnPropertyNames(Person.prototype)) //["constructor", "name", "age", "job", "sayName"]
+        console.log('getOwnPropertySymbols', Object.getOwnPropertySymbols(Person.prototype)) //[]  针对符号
+    </script>
+    <script>
+        /**
+         * 属性枚举顺序
+         * for-in
+         * object.keys() 
+         * object.getOwnPropertyNames() // 升序
+         * object.getOwnPropertySymbols()// 升序
+         * object.assign() // 升序
+         */
+    </script>
+    <script>
+        /**
+         * 对象迭代
+         * values() 对象数组
+         * entries() 键/值对
+         * 符号会被忽略
+         */
+    </script>
+    <script>
+        /**
+         * 其他原型的写法
+         * 直接通过一个包含所有属性和方法的对象字面量来重写原型成为了一种常见的做法
+         * prototype 重写之后的constructor属性就不指向PersonQ
+         * 指向新的对象(Object构造函数)
+         * 
+         * 
+         */
+        function psersonQ() {
+
+        };
+        psersonQ.prototype = {
+            name: 'Nicholas',
+            age: 29,
+            job: 'Software Engineer',
+            sayName() {
+                console.log(this.name)
+            }
+        }
+        let friend = new psersonQ();
+        console.log(friend instanceof Object) // true
+        console.log(friend instanceof psersonQ) // true
+        console.log(friend.constructor === psersonQ) //false
+        console.log(friend.constructor === Object) // true
+            /**
+             * 如果constructor的值很重要,
+             * 可以专门设置一下它的值
+             */
+        function psersonW() {
+
+        };
+        let friend3 = new psersonW();
+        psersonW.prototype = {
+            constructor: psersonW, // enumberable 可枚举的
+            name: 'Nicholas',
+            age: 29,
+            job: 'Software Engineer',
+            sayName() {
+                console.log(this.name)
+            }
+        }
+        let friend1 = new psersonW();
+        console.log(friend1.constructor === psersonW) //true
+        console.log('psersonW.prototype', psersonW.prototype)
+        console.log('constructor', Object.getOwnPropertyDescriptor(psersonW.prototype, 'constructor'))
+        Object.defineProperty(psersonW.prototype, "constructor", {
+            enumerable: false,
+            value: psersonW
+        })
+        console.log('constructor', Object.getOwnPropertyDescriptor(psersonW.prototype, 'constructor'))
+            /**
+             *  原型的动态性
+             * 
+             */
+            // friend1.sayName()  报错 因为这个原型上面没有sayName属性
+    </script>
+    <script>
+        /**
+         * 原生对象原型
+         * 不仅体现在自定义类型上,而且还因为它也是实现所有原生引用类型的模式
+         * 引用类型的构造函数(Object,Array,String) 原型上定义了实例方法
+         */
+    </script>
+    <script>
+        /**
+         * 原型的问题
+         * 弱化了向构造函数传递初始化参数的能力
+         *  会导致所有实例默认取得相同的属性值
+         *  最大的问题是它的共享特性
+         *  实际开发中通常不单独使用原型模式的原因
+         */
+        function psersonE() {
+
+        };
+        psersonE.prototype = {
+            constructor: psersonE, // enumberable 可枚举的
+            name: 'Nicholas',
+            age: 29,
+            job: 'Software Engineer',
+            friends: ["shelby", "Court"],
+            sayName() {
+                console.log(this.name)
+            }
+        }
+        let friend4 = new psersonE();
+        let friend5 = new psersonE();
+        friend4.friends.push('Van');
+        console.log(friend5.friends) //["shelby", "Court", "Van"]
+    </script>
+    <script>
+        /**
+         * 继承
+         * 接口继承:继承方法签名
+         * 实现继承:实际的方法  ECMAScript主要通过原型链实现的
+         * 
+         */
+        /**
+         * 原型链
+         * 继承的主要方式
+         * 通过继承多个引用类型的属性和方法
+         * 原型是另一个类型的实例(这样反复)
+         * 形成原型链
+         * 
+         */
+        function SuperType(params) {
+            this.property = true
+        }
+        SuperType.prototype.getSuperValue = function() {
+            return this.property
+        }
+
+        function SubType() {
+            this.subProperty = false
+        }
+        // 继承 SuperType
+        SubType.prototype = new SuperType(); // 原型为 其他类型的实例
+        SubType.prototype.getSubValue = function() {
+            return this.subProperty
+        }
+        let instance = new SubType();
+        let instance222 = new SuperType();
+        console.log('原型链 instance', instance.getSuperValue()) //instance true
+        console.log('原型链 instance', instance) //instance true
+        console.log('原型链 instance', instance.__proto__) //  {property: true,getSubValue: ƒ ()}
+        console.log('原型链 instance', instance.__proto__.__proto__) //  {getSuperValue: ƒ ()}
+        console.log('原型链 instance222', instance222) //  {property: true}
+        console.log('原型链 instance222', instance222.__proto__) //  {getSuperValue: ƒ ()}
+        console.log('toStringtoStringtoStringtoString', instance222.toString()) //  {[object Object]}
+        console.log('instance', instance instanceof SubType) //instance true
+        console.log('instance', instance instanceof SuperType) //instance true
+        console.log('instance', instance instanceof SuperType) //instance true
+        console.log('constructor', instance.__proto__.constructor == SuperType) //constructor true
+        console.log('constructor', instance.constructor == SuperType) //constructor true
+            /**
+             *  SubType原型对SuperType实例的继承
+             *  instance实例  SubType原型 SuperType原型找到getSuperValue()方法
+             *  对属性和方法一直会搜索到原型链的末端
+             */
+    </script>
+    <script>
+        /**
+         * 默认原型
+         * 所有的引用类型都继承Object,这也是通过原型链实现的
+         * 这个实例有一个内部指针指向Object.prototype
+         * 所有的自定义类型能够继承包括toString()、valueOf()在内的所有方法的原因
+         * isPrototypeOf()方法  原型中包含这个实例,就会返回true
+         * 
+         */
+        console.log(Object.prototype.isPrototypeOf(instance)); // true
+        console.log(SubType.prototype.isPrototypeOf(instance)); // true
+        console.log(SubType.prototype.isPrototypeOf(instance)); // true
+    </script>
+    <script>
+        /**
+         * 关于方法
+         * 子类有时候需要覆盖父类的方法
+         * 或者增加父类没有的方法
+         * 
+         */
+        function SuperTypeA(params) {
+            this.property = true
+        }
+        SuperTypeA.prototype.getSuperValue = function() {
+            return this.property
+        }
+
+        function SubTypeA() {
+            this.subProperty = false
+        }
+        SubTypeA.prototype = new SuperTypeA();
+        console.log('instanceA', SubTypeA.prototype) //instanceA false
+        SubTypeA.prototype.getSubValue = function() {
+            return this.subProperty
+        }
+        SubTypeA.prototype.getSuperValue = function() {
+            return false;
+        }
+        const instanceA = new SubTypeA();
+        console.log('instanceA', instanceA.getSuperValue()) //instanceA false
+            /**
+             * getSubValue: ƒ () //新方法
+             * getSuperValue: ƒ () //覆盖方法
+             * property: true
+             */
+        console.log('instanceA', SubTypeA.prototype) //instanceA false
+            // 覆盖后圆形是一个Object 实例不再是SuperType的实例
+        SubTypeA.prototype = {
+
+        }
+    </script>
+    <script>
+        /**
+         * 原型链问题
+         * 1.原型中包含引用值的时候,
+         * 引用值会在实例之间共享
+         * 为什么属性会定义在构造函数中而不是原型上
+         * 2. 实例化的时候不能把参数传进父类的构造函数
+         * 导致原型链基本不会被单独使用
+         */
+        function SuperTypeB() {
+            this.colors = ['red', 'blue', 'green']
+        }
+
+        function SubtypeB() {
+
+        }
+        SubtypeB.prototype = new SuperTypeB();
+        let instanceB = new SubtypeB();
+        instanceB.colors.push('black');
+        console.log('instanceB.colors', instanceB.colors) //["red", "blue", "green", "black"]
+        let instanceB1 = new SubtypeB()
+        console.log(console.log('instanceB1.colors', instanceB1.colors)); //["red", "blue", "green", "black"]
+        // SubtypeB的原型是SuperTypeB的实例,所以也获得自己的一个colors属性
+        // SubtypeB的所有实例都会共享这个colors属性
+    </script>
+    <script>
+        /**
+         * 盗用构造函数(对象伪装或经典继承)
+         * 为了解决原型链包含引用值导致的继承问题
+         * 盗用构造函数的技术在开发社区流行起来
+         * 基本思路:
+         * 在子类构造函数中调用父类构造函数
+         * 因为 毕竟函数就是在特定上下文执行的简单的对象
+         * apply和call方法以新创建的对象为上下文执行构造函数
+         */
+        function SuperTypeC() {
+            this.colors = ['red', 'blue', 'green']
+            this.sayName = function() {
+                console.log('嘻嘻哈哈')
+            }
+        }
+
+        function SubtypeC() {
+            SuperTypeC.call(this)
+        }
+        let instanceC = new SubtypeC();
+        console.log('instanceC', instanceC) // 
+        instanceC.colors.push('black') //red,blue,green
+        console.log('instanceC', instanceC.colors)
+        let instanceC1 = new SubtypeC();
+        console.log('instanceC1', instanceC1.colors) //["red", "blue", "green"]
+            /**
+             * 实例中加粗的代码展示了盗用构造函数的待用
+             * 为SubType的实例创建新的对象上下文中
+             * 执行了对象上运行了所有初始化代码,结果每个对象实例上都会有自己的colors属性
+             * 
+             */
+    </script>
+    <script>
+        /**
+         * 传递参数
+         * 使用原型链,盗用构造函数可以就是
+         * 可以在子类构造函数中向父类构造函数传参
+         */
+        function SuperTypeD(name) {
+            this.name = name;
+        }
+
+        function SubtypeD() {
+            SuperTypeD.call(this, 'Nicholas');
+            this.age = 29
+        }
+        let instanceD = new SubtypeD();
+        console.log(instanceD.name); //'Nicholas'
+        console.log(instanceD.age); //29
+    </script>
+    <script>
+        /**
+         * 盗用构造函数的问题
+         * 也是使用构造函数模式
+         * 必须在构造函数中定义方法
+         * 因此函数不能重用
+         * 
+         */
+    </script>
+    <script>
+        /**
+         * 组合继承
+         * 综合瞭原型链和盗用构造函数
+         * 这样既可以把方法定义在原型上实现重用
+         * 又可以让每个实例都有自己的属性
+         */
+        function SuperTypeE(name) {
+            this.name = name;
+            this.colors = ['red', 'blue', 'green']
+        }
+        SuperTypeE.prototype.sayName = function() {
+            console.log(this.name)
+        }
+
+        function SubtypeE() {
+            SuperTypeE.call(this, 'Nicholas');
+            this.age = 29
+        }
+        SubtypeE.prototype = new SuperTypeE();
+        SubtypeE.prototype.sayAge = function() {
+            console.log(this.age)
+        }
+        let instanceE1 = new SubtypeE('Nicholas', 29);
+        instanceE1.colors.push('black');
+        console.log(instanceE1.colors); //'red', 'blue', 'green',black
+        instanceE1.sayName(); // 'Nicholas'
+        instanceE1.sayAge(); // 29
+
+        let instanceE2 = new SubtypeE('Greg', 27);
+        console.log(instanceE2.colors); // //'red', 'blue', 'green'
+        instanceE2.sayName(); // 'Greg'
+        instanceE2.sayAge(); // 27
+    </script>
+
+
+</body>
+
+
+</html>

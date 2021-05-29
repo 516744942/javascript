@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Date</title>
+</head>
+
+<body>
+
+    <script>
+        let now = new Date();
+        console.log(now instanceof Date);
+        console.log(Date.prototype)
+        console.log(now.__proto__)
+        console.log(now.__proto__ == Date.prototype)
+    </script>
+
+    <script>
+        /**
+         * Date 1970年 1月1日午夜
+         * 创建 日期对象  let now = new Date()  UTC时间
+         * Date.parse()  接受一个表示日期的字符串参数,表示该日期的毫秒数
+         * 不表示日期返回NaN
+         * 直接把 字符串传给构造,Date在后台执行Date.parse()
+         */
+        let now1 = new Date();
+        console.log('now1', now1)
+        let parseTime = Date.parse(now1);
+        console.log('parseTime', parseTime)
+        let parseTime1 = Date.parse('5/23/2019');
+        let parseTime2 = Date.parse('May 23,2019');
+        console.log(parseTime1, parseTime2)
+        let someDate = new Date(Date.parse("May 23, 2019"))
+        console.log('someDate', someDate)
+            // let now1 = new Date('January 当前日, 2019');
+        console.log(new Date('January 当前日, 2019'));
+        /**
+         *   Date.UTC也返回日期的毫秒
+         *  Date.UTC(年,零起点月数,日,时,分,秒和毫秒)  1月是0,2月是1  年和月是必需的
+         *  月0-11  日1-31  时 0-23 也会被隐式 调用
+         */
+        let time1 = Date.UTC(2000, 0);
+        console.log(time1)
+        console.log(time1)
+            //   GMT时间 2005年5月5日 下午5点55分55秒
+        let allFives = new Date(Date.UTC(2005, 4, 5, 17, 55, 55))
+        console.log(allFives);
+        /**
+         * 当前时间 Date now();
+         * 
+         */
+        let start = Date.now();
+        console.log(start);
+    </script>
+
+    <script>
+        /**
+         * 继承方法
+         * Date.prototype
+         * 重写了 toLocaleString()、toString()和valueOf()
+         */
+        console.log('Date.prototype')
+        let a1 = new Date().toLocaleString();
+        let a2 = new Date().toString();
+        let a3 = new Date().valueOf();
+        console.log(a1) //2021/5/7下午10:45:50
+        console.log(a2) // Fri May 07 2021 22:45:50 GMT+0800 (中国标准时间)
+        console.log(a3) // 1620398781045 number 
+        let data1 = new Date(2019, 0, 1);
+        let data2 = new Date(2019, 1, 1);
+        console.log(data1 > data2) //操作符 小于号和大于号可以直接返回使用它的值
+    </script>
+    <script>
+        /**
+         *  
+         */
+        let time11 = new Date().toDateString()
+        let time2 = new Date().toTimeString()
+        let time3 = new Date().toLocaleDateString()
+        let time4 = new Date().toLocaleTimeString();
+        let time5 = new Date().toUTCString();
+        console.log('日期格式化');
+        console.log(time11);
+        console.log(time2);
+        console.log(time3);
+        console.log(time4);
+        console.log(time5);
+    </script>
+
+</body>
+
+</html>

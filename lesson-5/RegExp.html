@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>RegExp</title>
+</head>
+
+
+
+<body>
+
+
+    <script>
+        /**
+         * RegExp通过类型支持正则表达式
+         * 语法 let expression = /pattern/flags
+         * 
+         */
+        /**
+         * 匹配模式标记
+         * g 全局模式化
+         * i 不区分大小写
+         * m 多行模式
+         * y 粘附模式
+         * u:Unicode模式
+         * s:dotAll  表示元字符. 匹配任何字符
+         * 
+         * 
+         */
+        let pattern1 = /at/g
+        let pattern2 = /[bc]at/g //b或者c
+        let pattern3 = /.at/gi // 所有.at结尾
+        let pattern4 = /at/g
+
+        let string1 = `嘻嘻哈哈cat 
+        嘻嘻哈哈哈哈batt`
+        let patternM = /at/m
+        let matchesM = patternM.exec(string1);
+        console.log('matchesM', matchesM)
+        let matches1 = pattern1.exec(string1);
+
+        let state1 = pattern1.test(string1)
+        console.log(matches1)
+        console.log(state1)
+        let matches2 = pattern2.exec(string1);
+        let matches3 = pattern2.exec(string1);
+        console.log(matches2)
+        console.log(matches3)
+        let matches4 = pattern3.exec(string1);
+        console.log(matches4)
+            /**
+             * 元字符在模式中必须转义 ([{\^$|}]) ? * + .
+             */
+        let string2 = "嘻嘻哈哈[bc]at 嘻嘻哈哈哈哈batt";
+        let pattern21 = /\[bc\]at/g //b或者c
+        let matches5 = pattern21.exec(string2);
+        console.log('matches5', matches5)
+
+        let string3 = "嘻嘻哈哈.at 嘻嘻哈哈哈哈batt";
+        let pattern31 = /\.at/g //b或者c
+        let matches6 = pattern31.exec(string3);
+        console.log('matches6', matches6)
+            /**
+             * s所有空白字符
+             * S非空白字符 不包换换行
+             */
+        let pattern41 = /\S/
+        let matches7 = pattern41.exec(string3);
+        console.log('matches7', matches7)
+            /**
+             * 除了
+             * [^ABC]
+             */
+        let string4 = "google go runoob taobao";
+        let pattern6 = /^g/g
+        console.log('pattern6', pattern6.__proto__)
+        console.log('pattern6', pattern6.global)
+        let matches8 = pattern6.exec(string4);
+        let matches9 = pattern6.exec(string4);
+        let state2 = pattern6.test(string4)
+        console.log('matches8', matches8, matches9);
+        /**
+         * 实例属性
+         * global 布尔值   g标记
+         * ignoreCase 布尔值   i标记
+         * unicode 布尔值   u标记
+         * sticky 布尔值  设置y标记
+         * lastIndex 整数  从0 标记
+         * multiline 布尔值   i标记
+         * dotAll   是否标记了s
+         * source 布尔值  正则表达式字面量 没有开头和结尾的斜杆
+         * flags 标记字符串
+         */
+        let pattern100 = new RegExp('\\[bc\\]at', 'i');
+    </script>
+    <script>
+        /**
+         * RegExp 主要实例方法 exec(String)
+         * 
+         */
+        let text = "mom and
+        dad and baby ";
+        let pattern = /mom( and dad( data baby)?)?/gi;
+        let textMatches = pattern.exec(text);
+        console.log(textMatches)
+    </script>
+</body>
+
+</html>

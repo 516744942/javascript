@@ -1,0 +1,390 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>属性(数据属性和访问器属性)</title>
+</head>
+
+<body>
+
+
+
+</body>
+<script>
+    //  数据属性和访问器属性 
+    let person = {
+        name: "Nicholas"
+    }
+    Object.defineProperty(person, "name", {
+        configurable: false, //是否可以删除
+        writable: false, // 是否可以被修改
+        value: "123", // 默认undefined
+        enumerable: true, // 是否可以通过for-in循环返回
+    })
+    person.name = 212312
+    delete person.name
+    for (const key in person) {
+        console.log(person)
+        console.log(key)
+    }
+    console.log('example1', person)
+</script>
+<script>
+    // 访问器属性 
+    /**
+     * configurable
+     * enumerable
+     * get
+     * set
+     * 
+     */
+    let book = {
+        year_: 2017,
+        edition: 11,
+    };
+    Object.defineProperty(book, "year", {
+        get() {
+            return this.year_
+        },
+        set(newValue) {
+            if (newValue > 2017) {
+                this.year_ = newValue
+                this.edition += newValue - 2017
+            }
+        }
+    });
+    book.year = 3000
+    console.log(book);
+    console.log('example2', book)
+</script>
+
+<script>
+    let book1 = {};
+    Object.defineProperties(book1, {
+
+        year_: {
+            value: 2080
+        },
+        edition: {
+            value: 1
+        },
+        year: {
+            get() {
+                return this.year_;
+            },
+            set(newValue) {
+                // console.log('newValue', newValue)
+                if (newValue > 2017) {
+                    console.log(this)
+                    console.log(newValue)
+                    this.year_ = newValue
+                    this.edition = newValue - 1
+                }
+            }
+        },
+
+    });
+    console.log(Object.getOwnPropertyDescriptor(book1, 'year'));
+    console.log(Object.getOwnPropertyDescriptors(book1));
+    console.log(book1.propertyIsEnumerable())
+        // 
+    book1.year = 2100;
+    console.log('example3', book1.year)
+</script>
+
+<script>
+    /**
+     * 合并对象
+     * 混入 mixin
+     * 将每个源对象中可枚举 Object.propertyIsEnumerable()返回true 
+     * 和自有 Object.hasOwnProperty  返回true 属性复制到目标对象上 
+     * 字符串和符号为键的属性会被复制
+     * 会使用源对象上 get取得属性的值
+     * 然后使用目标对象上的set 设置属性的值
+     */
+    Object.assign({}, {});
+    let dest, src, result;
+    /**
+     * 简单复制
+     */
+    dest = {};
+    src = {
+        id: 'src',
+        [Symbol.for('foo')]: 12
+    };
+    Object.defineProperty(src, 'value', {
+        enumerable: false,
+        value: '不可以浅拷贝数据'
+    })
+    console.log('src', src) //{id: "src", value: "不可以浅拷贝数据"}
+    console.log('hasOwnProperty', src.hasOwnProperty('value')) // true
+    console.log('hasOwnProperty', src.hasOwnProperty(Symbol.for('foo'))) // true
+    result = Object.assign(dest, src);
+    console.log('result', result) //{id: "src"}
+    console.log(Object.getOwnPropertyDescriptors(src)) // 数据属性 
+        /**
+         *  configurable: true
+         *  enumerable: true
+         *  value: "src"
+         *  writable: true
+         */
+
+    /**
+     * 多个源对象 
+     */
+    dest = {}
+    result = Object.assign(dest, {
+        a: 'foo'
+    }, {
+        b: 'bar'
+    }); //
+    console.log('result', result) //a: "foo", b: "bar"}
+
+    /**
+     * 获取函数与设置函数
+     */
+    dest1 = {
+        set a(val) {
+            console.log(`Invoked dest setter with param ${val}`);
+        }
+    }
+    src1 = {
+        get a() {
+            console.log('Invoked src getter');
+            return 'foo'
+        }
+    }
+    let finallyObj = Object.assign(dest1, src1);
+    console.log('dest', Reflect.ownKeys(finallyObj)) //["a"]
+    console.log('dest', Object.getOwnPropertyNames(finallyObj)) //["a"]
+</script>
+
+<script>
+    /**
+     * 对源对象执行的是浅复制
+     * 多个源对象相同则使用的是最后一个
+     * 访问器属性取得的值,比如获取函数,会作为一个静态值赋给目标对象
+     * 换句话说不能在两个对象间转移获取函数和设置函数。
+     */
+    let destA, srcA, resultA;
+    destA = {
+        id: 'dest'
+    };
+    resultA = Object.assign(destA, {
+        id: 'src1',
+        a: 'foo',
+
+    }, {
+        id: 'src2',
+        b: 'bar'
+    })
+    console.log(resultA); //{id: "src2", a: "foo", b: "bar"}
+    // 观察函数到覆盖的过程
+    destA = {
+        set id(x) {
+            console.log(x)
+        }
+    }
+    Object.assign(destA, {
+            id: 'src1',
+            a: 'foo',
+
+        }, {
+            id: 'src2',
+            b: 'bar'
+        }) // src1 src2
+        /**
+         * 对象引用
+         */
+    destA = {};
+    srcA = {
+        a: {}
+    }
+    Object.assign(destA, srcA);
+    console.log(destA) //{a:{}}
+    console.log(destA.a === srcA.a) //true 浅拷贝二级还是指向同一个内存堆
+</script>
+<script>
+    /**
+     * 错误处理
+     * 回滚已经完成的修改
+     * 目标对象上已经完成的修改还会继续存在
+     */
+    let destB, srcB, resultB;
+    destB = {};
+    srcB = {
+        a: 'foo',
+        get b() {
+            throw new Error(); //Object.assign();
+        },
+        c: 'bar'
+    };
+    try {
+        Object.assign(destB, srcB)
+    } catch (e) {}
+    console.log(destB) //{ a: "foo" }
+</script>
+<script>
+    /**
+     * 对象标识及相等判断
+     * 
+     */
+    console.log(true === 1); // false
+    console.log({} === {}); // false
+    console.log('2' === 2); // false
+    console.log(+0 === -0); // true
+    console.log(+0 === 0); // true
+    console.log(-0 === 0); // true
+    console.log(NaN, NaN); // false
+</script>
+<script>
+    /**
+     * 
+     * 改善这种情况 Object.is()
+     * 这个方法和 ==== 很像
+     * 但是也考虑到上面的边界情况
+     * 
+     */
+    console.log(Object.is(true, 1)); // false
+    console.log(Object.is({}, {})); // false
+    console.log(Object.is('2', 2)); // false
+    console.log(Object.is(+0, -0)); // false
+    console.log(Object.is(+0, 0)); // true
+    console.log(Object.is(-0, 0)); // false
+    console.log(Object.is(NaN, NaN)); // true
+    //   超过两个值递归利用相等性 传递即可
+    function recursivelyCheckEqual(x, ...rest) {
+        return Object.is(x, rest[0] && (rest.length < 2 || recursivelyCheckEqual(...rest)))
+    };
+</script>
+<script>
+    /**
+     * 增强的对象语法
+     * 提升处理对象的方便程度 
+     */
+    // 属性值的简写
+    let name = 'Matt';
+    let personB = {
+        name
+    };
+    /**
+     * 可计算属性
+     *
+     */
+    const ageKey = 'age1';
+    let personA = {};
+    personA[ageKey] = 123
+    console.log('person', personA)
+    let personC = {
+        [ageKey]: 27
+    };
+    console.log('person', personC) //person {age1: 27}
+        /**
+         *  用表达式的计算属性本身
+         * 
+         */
+    const nameKey = 'name';
+    let uniqueToken = 0;
+
+    function getUniqueKey(key) {
+        return `${key}_${uniqueToken++}`
+    };
+    let personD = {
+        [getUniqueKey(nameKey)]: 'Matt'
+    };
+    console.log('personD', personD) //personD {name_0: "Matt"}
+</script>
+
+<script>
+    /**
+     * 结构解析
+     */
+    let personA1 = {
+        name: 'Matt',
+        age: 27
+    };
+    const {
+        name: personName,
+        age: personAge
+    } = personA1
+    console.log(personName) //Matt
+    console.log(personAge); // 27
+</script>
+<script>
+    /**
+     * 嵌套结构
+     */
+    let personB1 = {
+        name: 'Matt',
+        age: 27,
+        job: {
+            title: 'software engineer'
+        }
+    };
+    let personCopy = {};
+    ({
+        name: personCopy.name,
+        age: personCopy.age,
+        job: personCopy.job
+    } = personB1)
+    console.log('personCopy', personCopy)
+        // 嵌套
+    let {
+        job: {
+            title: myTitle
+        }
+    } = personB1
+    myTitle = "123123"
+    console.log('myTitle', myTitle)
+    console.log('job', personB1); //job: {title: 'software engineer'}
+    /**
+     * 部分结构
+     */
+    let personC1 = {
+        name: 'Matt',
+        age: 27
+    };
+    let personNameB11, personNameA11, Per
+    try {
+        ({
+            name: personNameB11,
+            foo: {
+                bar: personNameA11
+            },
+            age: Per
+        } = personC1)
+
+    } catch (e) {
+
+    }
+    console.log(personNameB11, personNameA11, Per) //Matt undefined undefined
+        /**
+         * 参数上下文匹配
+         */
+    let personD1 = {
+        name: 'Matt',
+        age: 27
+    };
+
+    function printPerson(foo, {
+        name,
+        age
+    }, bar) {
+        console.log(arguments)
+        console.log(name, age)
+    }
+    printPerson('1st', personD1, '2nd'); //0: "1st" 1: {name: "123"} 2: "2nd" //  Matt 27
+    function printPersonB(foo, {
+        name: Person1,
+        age: age1Person1
+    }, bar) {
+        console.log(arguments)
+        console.log(Person1, age1Person1)
+    }
+    printPerson('1st', personD1, '2nd'); //0: "1st" 1: {name: "123"} 2: "2nd" //  Matt 27
+</script>
+
+</html>

@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>创建对象</title>
+</head>
+
+<body>
+
+
+    <script>
+        /**
+         * 字面量或构造函数的不足
+         * 创建具体有同样接口的多个对象需要重复编写很多代码
+         */
+    </script>
+
+    <script>
+        /**
+         * 工厂模式
+         */
+        function createPerson(name, age, job) {
+            let o = new Object;
+            o.name = name
+            o.age = age
+            o.job = job
+            o.sayName = function() {
+                console.log(this.name)
+            }
+            return o
+        }
+        let person1 = createPerson('Nicholas', 29, "software Engineer");
+        //    age: 29
+        // job: "software Engineer"
+        // name: "Nicholas
+        let person2 = createPerson('Greg', 27, "Doctor");
+        console.log(person1, person2)
+            // age: 27
+            // job: "Doctor"
+            // name: "Greg"
+    </script>
+    <script>
+        /**
+         * 构造函数模式
+         * 首字母大写
+         */
+        function Person(name, age, job) {
+            this.name = name;
+            this.age = age;
+            this.job = job;
+            this.sayName = function() {
+                    console.log(this.name)
+                }
+                // console.log(this)
+                //return 简单类型为this对象 复杂数据类型 为该对象
+
+        }
+        let person33 = new Person('Greg', 27, "Doctor");
+        console.log(person33)
+            // console.log(new Person().constructor === Person) //true
+            /**
+             * 没有明显的创建对象
+             * 属性和方法直接赋值给了this
+             * 没有 return
+             * 
+             */
+            /**
+             * new 操作符会执行如下操作
+             * 在内存中创建一个新对象
+             * 这个对象内部的[[prototype]]特性被赋值为构造函数的property
+             * 构造函数内部的this被赋值为这个新对象
+             * 执行构造函数内部的代码 给对象添加新属性
+             * 如果构造函数返回非空对象,则返回对象,否则返回刚刚创建的对象
+             */
+    </script>
+    <script>
+        /**
+         * constructor 本来是用于标识对象类型的。
+         * 一般认为instanceof操作符是确定对象类型更可靠的方式
+         */
+        console.log(person33 instanceof Object); //true
+        console.log(person33 instanceof Person); //true
+        console.log(person33.constructor === Person); //true
+    </script>
+    <script>
+        /**
+         * 函数表达式的写法 let Person = function(name,age,job){}
+         * 如果不想传参数 后面的括号可加可不加
+         */
+        let person333 = new Person
+        console.log('person333', person333);
+        /**
+         * age: undefined
+         * job: undefined
+         * name: undefined
+         */
+    </script>
+    <script>
+        /**
+         * 构造函数也是函数
+         * 用了new 就是构造函数 不用new就是普通 函数
+         * 作为函数调用 添加到window对象上 没有this 指向global对象 浏览器是window
+         * 
+         */
+        Person("aaaa", 123, 'doctor');
+        window.sayName(); // aaaa
+        console.log(window.job); // doctor
+        // 在另一个对象的作用域中调用
+        let o = new Object();
+        Person.call(o, "dddd", 122, 'worker');
+        console.log(o)
+            /**
+             * age: 122
+             *job: "worker"
+             *name: "dddd"
+             */
+    </script>
+    <script>
+        /**
+         * 构造函数的问题
+         * ECMAScript对象中函数是对象
+         * 因此每次都会初始化一个对象
+         * this对象可以把函数与对象的绑定推行到运行时
+         */
+        //  等价逻辑
+        function PersonD4(name, age, job) {
+            this.name = name
+            this.age = age
+            this.job = job
+            this.sayName = new Function("console.log(this.name)");
+        }
+        //  这种方式方式创建的函数会带来不同作用域和标识符解析
+        // 但是创建新的Function实例的机制是一样的。因此不同实例上的函数虽然不同却不相等
+
+        let personD11 = new PersonD4(1, 2, 3)
+        let personD12 = new PersonD4(1, 2, 3)
+        console.log(personD11.sayName === personD12.sayName) //false
+            /**
+             * 为了解决这个问题可以
+             * 可以函数定义到构造函数外部
+             * 只是一个指向外部函数的指针
+             * sayName属性等于全局sayName()
+             * 虽然解决了问题 但是也因此搞乱了全局的作用域
+             */
+        function PersonF5(name, age, job) {
+            this.name = name
+            this.age = age
+            this.job = job
+            this.sayName = sayName
+        }
+
+        function sayName() {
+            console.log(this.name);
+        }
+        let personF5 = new PersonF5(1, 2, 3)
+        let personF6 = new PersonF5(1, 2, 3);
+        console.log(personF5.sayName == personF6.sayName) //true
+    </script>
+
+</body>
+
+</html>

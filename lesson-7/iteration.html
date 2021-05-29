@@ -1,0 +1,597 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>迭代器与生成器</title>
+</head>
+
+<body>
+
+    <script>
+        /**
+         * 1理解迭代
+         * for(let i = 1;i<=10;++i){
+         *  console.log(i);
+         * }
+         * 如下原因,通过这种循环来执行例程并不理想
+         * 1.事先知道如何使用数据结构
+         * 2.遍历顺序并不是数据结构固有的
+         * es5 增加了 Array.prototype.forEac
+         * 
+         */
+        console.log(Array.prototype.forEach) //迭代优点,不需要索引了 缺点没有办法标识迭代中止
+            // 这个方法只适用于数组,回调结果也比较笨拙
+    </script>
+    <script>
+        /**
+         * 迭代器模式
+         * 可迭代对象
+         * 实现了Iterable接口
+         * 通过迭代器Iterator消费
+         * 
+         */
+        let arr = [3, 1, 4];
+        // 集合的元素是有限的
+        // 可以按插入顺序访问每个元素
+        let set = new Set().add(3).add(1).add(4);
+        console.log(set) //Set(3) {3, 1, 4}
+    </script>
+
+    <script>
+        /**
+         * 可迭代协议
+         * 支持迭代的自我识别能力和创建实现Iterator
+         * 
+         * 函数
+         * 内置类型都实现了Iterable
+         * 字符串 String
+         * 数组   Array
+         * 映射   map
+         * 集合   Set
+         * arguments 对象 
+         * NodeList等DOM集合类型
+         */
+        for (const iterator of "123") {
+            console.log('iterator', iterator)
+        }
+        let temArr = ['aaa', 'bbb', 'ccc'];
+        let temNum = 0;
+        let obj1 = {}
+        console.log(temArr[Symbol.iterator])
+        console.log('temNumtemNum', temNum[Symbol.iterator]) //undefine
+        console.log('obj1obj1obj1', obj1[Symbol.iterator]) //undefine
+        let temMap = new Map();
+        console.log(temMap[Symbol.iterator])
+        temMap.set('a', 1).set('b', 2);
+        console.log('temMap', temMap) //Map(2) {"a" => 1, "b" => 2}
+        let temSet = new Set();
+        console.log(temSet[Symbol.iterator])
+        temSet.add('a').add('b').add('c')
+        console.log(temSet) //Set(3) {"a", "b", "c"}
+    </script>
+    <script>
+        /**
+         * 可接受迭代对象的原声语言特性包括
+         *  for-of
+         *  扩展操作符
+         *  Array.from();
+         *  创建集合
+         *  创建映射
+         *  Promise.all();
+         *  Promise.race();
+         *  yield* 操作符  在生成器中使用
+         *  如果对象原型链上的父类实现了iterator
+         *  
+         *  
+         * 
+         */
+        class FooArray extends Array {} //如果对象原型链上的父类实现了iterator
+        let fooArr = new FooArray('foo', 'bar', 'baz');
+        for (const iterator of fooArr) {
+            console.log(iterator) //  foo bar baz
+        }
+    </script>
+    <script>
+        /**
+         * 迭代器协议
+         * 迭代器是一种一次性使用的对象
+         * 用于迭代与其关联的可迭代对象
+         * next()方法 ,每次成功调用next(),都会返回一个IteratorResult对象
+         * IteratorResult对象包含两个属性:done和value
+         * 并不知道 怎么从可迭代对象中取得下一个值,到达done:true 状态
+         */
+        let iter = temArr[Symbol.iterator]();
+        console.log(iter) //Array Iterator {}
+        console.log(iter.next()); // {value: "aaa", done: false}
+        console.log(iter.next()); //  {value: "bbb", done: false}
+        console.log(iter.next()); //  {value: "ccc", done: false}
+        console.log(iter.next()); //  {value: undefined, done: true}
+        console.log(iter.next()); //  {value: undefined, done: true}
+        /**
+         * 不同实例 迭代 独立
+         * 迭代期间被修改了,迭代器也会发生相应的变化
+         * 
+         */
+        let temArr2 = ['foo1', 'baz1'];
+        let itemIter2 = temArr2[Symbol.iterator]();
+        console.log(itemIter2.next()); // {value: "foo1", done: false}
+        console.log('itemIter2', itemIter2)
+        temArr2.splice(1, 0, 'aaaa')
+        temArr2.splice(0, 0, '哈哈哈');
+        console.log('temArr2', temArr2)
+
+        console.log(itemIter2.next()); // {value: "foo1", done: false}
+        console.log(itemIter2.next()); // {value: "aaaa", done: false}
+        console.log(itemIter2.next()); // {value: "baz1", done: false}
+    </script>
+    <script>
+        /**
+         * 显示的迭代器实现 一个原声的迭代器实现
+         * 
+         */
+        class CustomFoo {
+            [Symbol.iterator]() {
+                return {
+                    next() {
+                        return {
+                            done: false,
+                            value: 'foo'
+                        }
+                    }
+                }
+            }
+        }
+        let f = new CustomFoo();
+        console.log('foo', f)
+        console.log('foo', f[Symbol.iterator]()) //{next: ƒ}
+    </script>
+    <script>
+        /**
+         * 自定义迭代器
+         * 
+         */
+        class CustomCounter {
+            constructor(limit) {
+                this.count = 1;
+                this.limit = limit
+            }
+            next() {
+                    if (this.count <= this.limit) {
+                        return {
+                            done: false,
+                            value: this.count++
+                        }
+                    } else {
+                        return {
+                            done: true,
+                            value: undefined
+                        }
+                    }
+                }
+                [Symbol.iterator]() {
+                    console.log(this) // count: 4 limit: 3
+                    return this;
+                }
+        }
+        let counter = new CustomCounter(3);
+        for (const iterator of counter) {
+            console.log(iterator) // 1  2 3
+        }
+        for (const iterator of counter) {
+            console.log(iterator) //nothing logged
+        }
+        /**
+         * 为了 每创建一个迭代器就对应的一个新计算器
+         * 可以吧变量放到闭包里面 返回迭代器
+         * 
+         */
+        class CustomCounterTwo {
+            constructor(limit) {
+                    this.limit = limit
+                }
+                [Symbol.iterator]() {
+                    let count = 1,
+                        limit = this.limit
+                    return {
+                        next() {
+                            if (count <= limit) {
+                                return {
+                                    done: false,
+                                    value: count++
+                                }
+                            } else {
+                                return {
+                                    done: true,
+                                    value: undefined
+                                }
+                            }
+                        }
+                    }
+                }
+        }
+        let counterTwo = new CustomCounterTwo(3);
+        for (const iterator of counterTwo) {
+            console.log('iterator', iterator) // 1 2 3
+        }
+        for (const iterator of counterTwo) {
+            console.log('iterator', iterator) // 1 2 3
+        }
+        /**
+         *  因为每个迭代器实现了Iterable接口,所以他们可以用在任何可以迭代的地方
+         *  for-of 循环
+         */
+        let testArr = [3, 1, 4, 6];
+        let textIter = testArr[Symbol.iterator]();
+        console.log(textIter)
+        for (const iterator of testArr) {
+            console.log('iterator', iterator) //3 1 4 6
+        }
+        for (const iterator of textIter) {
+            console.log('iterator', iterator) //3 1 4 6
+        }
+    </script>
+    <script>
+        /**
+         * 提前终止迭代器
+         * for-of 可以通过break、 continue、return、throw
+         * 结构操作并未消费所有值
+         * return()方法必须返回一个有效的IteratorResult对象 可以只返回{done:true}
+         * 
+         * 
+         */
+        class CustomCounterThree {
+            constructor(limit) {
+                    this.limit = limit;
+                }
+                [Symbol.iterator]() {
+                    let count = 1,
+                        limit = this.limit;
+                    return {
+                        next() {
+                            if (count <= limit) {
+                                return {
+                                    done: false,
+                                    value: count++
+                                }
+                            } else {
+                                return {
+                                    done: true,
+                                    value: undefined
+                                }
+                            }
+                        },
+                        return () {
+                            console.log('Exiting early');
+                            return {
+                                done: true
+                            }
+                        }
+                    };
+                }
+        }
+        let counter1 = new CustomCounterThree(5);
+        for (let i of counter1) {
+            if (i > 2) {
+                break;
+            }
+            console.log(i) // 1  2  Exiting early
+        }
+        console.log('1111')
+        let counter3 = new CustomCounterThree(5);
+        let [a, b] = counter3
+        console.log('22222')
+        console.log(a)
+        console.log(b)
+            // let counter2 = new CustomCounterThree(5);
+            // for (let i of counter2) {
+            //     if (i > 2) {
+            //         throw 'err';
+            //     }
+            //     console.log(i) // 1  2  Exiting early
+            // }
+        let testa = [1, 2, 3, 4, 5, 6];
+        for (let item of testa) {
+            if (item > 2) {
+                break
+            }
+            console.log(item) //  1 2
+        }
+        console.log('重新')
+        for (let item of testa) {
+            console.log(item) // 1 2 3 4 5 6
+        }
+        /**
+         * 如果迭代器没有关闭
+         * 则还可以从上次离开的地方继续迭代
+         * 数组的迭代器就是不能关闭的
+         */
+        let iter111 = testa[Symbol.iterator]();
+        for (const iterator of iter111) {
+            if (iterator > 2) {
+                break
+            }
+            console.log(iterator) // 1 2
+        }
+        console.log('继续')
+        for (const iterator of iter111) {
+
+            console.log(iterator) // 4 5 6
+        }
+    </script>
+    <script>
+        /**
+         *   生成器
+         *   函数块内暂停和恢复代码执行的能力
+         *   使用生成器可以自定义迭代器和实现协程
+         * 
+         */
+    </script>
+    <script>
+        /**
+         * 基础
+         * 形式是一个函数
+         * 函数名称前面加一个 * 表示他是一个生成器
+         * 只要定义函数的地方,就可以定义生成器
+         * 箭头函数不能用来定义生成器函数
+         */
+        // 生成器的函数声明
+        function* generatorFn() {
+
+            }
+            // 函数表达式
+        let generatorFnExpression = function*(params) {
+
+        };
+        // 对象字面量方法的生成器函数
+        let foo = {
+            * generatorFn() {}
+        }
+        console.log('foo', foo);
+        // 作为类实例方法的生成器函数
+        class Foo { *
+            generatorFn() {}
+        }
+        //  作为类静态方法的生成器函数
+        class Bar {
+            static * generatorFn() {}
+        }
+    </script>
+    <script>
+        /**
+         * 标识生成器函数的星号不受两侧空格的影响
+         * 调用生成器函数会产生一个生成器对象
+         * 一开始处于暂停执行(suspended) //暂停
+         * 生成器对象也实现了Iteraotor 接口因此具有 next()方法
+         * 调用这个方法可以让生成器开始或恢复执行
+         * 
+         */
+        function* generatorFn1(params) {}
+        const g = generatorFn1();
+        console.log(g); //  generatorFn1 {<suspended>}
+        console.log(g.next); //  next() { [native code] }  本地代码
+
+        console.log(g.next()); //  {value: undefined, done: true}
+        /**
+         * value属性 可以通过生成器函数的返回值指定
+         */
+        function* generatorFn2() {
+            return 'foo'
+        }
+        const g1 = generatorFn2();
+        console.log(g1.next()); //  {value: "foo", done: true}
+        /**
+         * 生成器只会在初次调用next()方法后开始执行
+         * 
+         */
+        function* generatorFn3() {
+            console.log('foobar')
+        }
+        let generatorObject = generatorFn3();
+        console.log('generatorObject', generatorObject.next()); // foobar generatorObject {value: undefined, done: true}
+    </script>
+    <script>
+        /**
+         * 生成器对象实现了Iterable接口,它们默认的迭代器是自引用的
+         * 
+         */
+        function* generatorFn4() {}
+        console.log(generatorFn4); //generatorFn4() {}
+        console.log(generatorFn4()[Symbol.iterator]()); //generatorFn4 {<suspended>}
+        const g12 = generatorFn4();
+        console.log(g12 === g12[Symbol.iterator]()) //true
+    </script>
+    <script>
+        /**
+         * 通过yield中断执行
+         * yield关键词可以让生成器停止和开始执行
+         * 函数的作用域状态会被保留 
+         * 在生成器对象上调用next()方法来恢复执行
+         * 他生成的值会出现在next()方法返回的对象里
+         * 
+         * 
+         */
+        function* generatorFn5() {
+            yield
+        }
+        let generatorObject1 = generatorFn5();
+        console.log(generatorObject1.next()) //{value: undefined, done: false} 
+        console.log(generatorObject1.next()) //{value: undefined, done: true}
+            /**
+             * 通过yield 关键词推出的生成器函数会在done:false状态
+             * return关键词退出的生成器函数会处于 done:true
+             */
+        function* generatorFn6() {
+            yield 'foo';
+            yield 'bar';
+            return 'baz';
+            yield 'bar1';
+        }
+        let generatorObject6 = generatorFn6();
+        console.log(generatorObject6.next()) //{value: "foo", done: false}
+        console.log(generatorObject6.next()) //{value: "bar", done: false}
+        console.log(generatorObject6.next()) //{value: "baz", done: false}
+        console.log(generatorObject6.next()) //{value: "undefined", done: true}
+    </script>
+    <script>
+        /**
+         * 生成器函数内部的执行流程会针对每个生成器对象区分作用域
+         */
+        function* generatorFn7() {
+            yield 'foo';
+            yield 'bar';
+            return 'baz';
+        }
+        let generatorObject7 = generatorFn7();
+        let generatorObject7a = generatorFn7();
+        console.log(generatorObject7.next()) //{value: "foo", done: false}
+        console.log(generatorObject7a.next()) //{value: "foo", done: false}
+    </script>
+    <script>
+        /**
+         * 不能使用在嵌套函数里面
+         */
+        // 无效
+        function* generatorFn8() {
+            function a() {
+                yield
+            }
+        }
+        let generatorObject8 = generatorFn8();
+
+        console.log(generatorObject8.next()) //{value: undefined, done: true}
+    </script>
+    <script>
+        /**
+         * 生成器对象作为可迭代对象
+         * 在生成器对象上作为可迭代对象
+         * 在需要自定义迭代器对象时,这样使用生成器会特别有用
+         * 
+         */
+        function* generatorFn9() {
+            yield 'foo';
+            yield 'bar';
+            yield 'baz';
+        }
+        for (const iterator of generatorFn9()) {
+            console.log('iterator', iterator) //foo bar baz
+        }
+
+        function* nTimes(n) {
+            while (n--) {
+                yield n
+            }
+        }
+        for (const _ of nTimes(3)) {
+            console.log(_) //  2  1 0
+        }
+        /**
+         * 使用yield实现输出和输入
+         * 除了可以作为函数的中间返回使用
+         * 也可以作为函数的中间参数使用
+         */
+        // 输入
+        function* generatorFn10(initial) {
+            console.log(initial)
+            console.log(yield)
+            console.log(yield)
+        }
+        let generatorObject10a = generatorFn10('foo');
+        console.log('generatorObject10a', generatorObject10a.next('a')) //foo {value: undefined, done: false} 刚刚启动
+        console.log('generatorObject10a', generatorObject10a.next('b')) //b {value: undefined, done: false} 
+        console.log('generatorObject10a', generatorObject10a.next('c')) //c {value: undefined, done: false} 
+        console.log('generatorObject10a', generatorObject10a.next('d')) //{value: undefined, done: true}
+            //  输出
+        function* generatorFn11() {
+            return yield 'foo'
+        }
+        let generatorObject11a = generatorFn11();
+        console.log('generatorObject11a', generatorObject11a.next()); //{value: "foo", done: false}
+        console.log('generatorObject11a', generatorObject11a.next('bar')); //{value: "bar", done: true}
+    </script>
+
+    <script>
+        /**
+         * 
+         */
+        function* generatorFn12() {
+            yield*[1, 2];
+            yield*[3, 4];
+            yield*[5, 6];
+        }
+        for (const iterator of generatorFn12()) {
+            console.log('x', iterator) // 1 2 3 4 5 6
+        }
+    </script>
+    <script>
+        /**
+         * 使用 yield*实现递归算法
+         */
+        function* nTimesA(n) {
+            if (n > 0) {
+                yield* nTimesA(n - 1);
+                yield n - 1;
+            }
+        }
+        for (const iterator of nTimesA(3)) {
+            console.log(iterator) // 0  1 2
+        }
+    </script>
+    <script>
+        /**
+         * 
+         */
+        class Node {
+            constructor(id) {
+                this.id = id;
+                this.neighbors = new Set();
+            }
+            connect(node) {
+                if (node != this) {
+                    this.neighbors.add(node);
+                    node.neighbors.add(this);
+                }
+            }
+        }
+        class RandomGraph {
+            constructor(size) {
+                    this.nodes = new Set();
+                    for (let i = 0; i < size; i++) {
+                        this.nodes.add(new Node(i))
+                    }
+                    const threshold = 1 / size;
+                    for (const x of this.nodes) {
+                        for (const y of this.nodes) {
+                            if (Math.random() < threshold) {
+                                x.connect(y)
+                            }
+                        }
+                    }
+                } // 这个方法仅用于调试
+            print() {
+                for (const node of this.nodes) {
+                    const ids = [...node.neighbors]
+                        .map((n) => n.id)
+                        .join(',')
+                    console.log(`${node.id}:${ids}`)
+                }
+            }
+
+        }
+        const g111 = new RandomGraph(6);
+        g111.print();
+        // 0:2,3
+        //  1:
+        //  2:0
+        //  3:0
+        //  4:
+        //  5:
+    </script>
+
+
+
+</body>
+
+</html>

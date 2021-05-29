@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>操作符</title>
+</head>
+
+<body>
+
+    <script>
+        /**
+         * 操作符
+         * 通常会调用 valueOf()和/或 toString()方法来获取可以计算的值
+         * 一元操作符
+         *  递增/递减   ++  --
+         */
+        // 前缀递增 递减 先操作符 再加减
+        let age = 29;
+        ++age
+        let num1 = 2
+        let num2 = 20
+        let num3 = --num1 + num2
+        let num4 = num1 + num2
+        console.log(num3);
+        console.log(num4);
+        // 等于  age = age + 1
+        // 后缀 递增 递减
+        let num11 = 2
+        let num21 = 20
+        let num31 = num11-- + num21
+        let num41 = num11 + num21
+        console.log(num31);
+        console.log(num41);
+        let num111 = '123'
+            ++num111
+        console.log(num111);
+        let o = {
+            valueOf() {
+                return 1
+            }
+        }
+        console.log(--o) //0
+        console.log(o--) // 0
+        console.log(o); // -1
+    </script>
+
+    <script>
+        /**
+         *  一元 加和减
+         *  相当于 NUmber 
+         *  - 表示负值
+         */
+        let nums = 25
+        muns = +nums
+        console.log(muns);
+    </script>
+    <script>
+        /**
+         *  逻辑非 !
+         *  逻辑与 &&
+         *  逻辑或 ||
+         *  乘法 *
+         *  除法 / 
+         *  指数 ** Math.pow(3,2) 3**2    
+         *  取模 操作符  26% 5 1
+         *  加法操作符
+         *  减法操作符
+         *  关系操作符  <= >= > <
+         *  等于和不等于  == !=
+         *  全等和不全等 ===   !==
+         *  条件操作符 ? :
+         *  赋值操作符 =  let  num = 10  num +=10  *=  /=  %=  += -= <<= >>= >>>= 
+         *  逗号操作符  let comma = (5, 43, 13, 234)  //234
+         */
+        let squared = 3;
+        squared **= 2;
+        console.log(squared)
+        let comma = (5, 43, 13, 234)
+        console.log(comma);
+    </script>
+    <script>
+        /**
+         * 条件语句
+         *  if 语句  if(condition){} else if(condition){} else {}
+         *  do-while 语句
+         */
+        let i = 0;
+        do {
+            console.log('i', i)
+            i += 2
+        } while (i < 10) {
+            console.log('结束', i)
+        }
+        /**
+         * while 语句
+         */
+        let o1 = 0;
+        while (o1 < 10) {
+            o1 += 2
+        }
+        /**
+         *  for 语句
+         *  for in 语句 迭代语句 用于枚举对象非符号属性
+         */
+        let temObj = {
+                a: 1,
+                b: 2
+            }
+            // for (var item in temObj) {
+            //     if (temObj.hasOwnProperty(item)) {}
+            // }
+            /**
+             *  for-of  用于遍历可迭代对象的元素 
+             *   
+             */
+        for (const iterator of[2, 3, 4, 56, 1]) {
+            console.log(iterator)
+        }
+        /**
+         *  标签语句
+         */
+        let num = 0;
+        let j = 0;
+        for (let i = 1; i < 10; i++) {
+            j = i
+            if (i % 5 == 0) {
+                break
+            }
+            num++
+        }
+
+        console.log('j', j, num);
+        let num100 = 0;
+        for (let i = 1; i < 10; i++) {
+            j = i
+            if (i % 5 == 0) {
+                continue
+            }
+            num100++
+        }
+        console.log('j', j, num100);
+
+        let num101 = 0;
+        outermost:
+            for (let i = 0; i < 10; i++) {
+                for (let j = 0; j < 10; j++) {
+                    if (i == 5 && j == 5) {
+                        break outermost;
+                    }
+                    num101++
+                }
+            }
+        console.log('num101', num101);
+        let num102 = 0;
+        outermost:
+            for (let i = 0; i < 10; i++) {
+                for (let j = 0; j < 10; j++) {
+                    if (i == 5 && j == 5) {
+                        continue outermost;
+                    }
+                    num102++
+                }
+            }
+        console.log('num102', num102);
+
+        /**
+         *  with 语句
+         *  将代码作用域设置为该对象能提供便利
+         */
+        let obj = {
+            a: 1,
+            b: 2,
+            c: 3
+        }
+        with(obj) {
+            console.log(a, b, c)
+        };
+    </script>
+
+    <script>
+        /**
+         *  switch 语句
+         *  流程控制语句
+         *  没有break 就会继续匹配下一个条件
+         *  default关键词用在任何条件都没有满足时 指定默认执行语句 相当于else
+         *  
+         */
+        switch ('hello world') {
+            case 'hello' + ' world':
+                console.log('greeting was found')
+                break;
+            case 'goodbye':
+                console.log('Closing was found.')
+                break;
+            default:
+                console.log('Unexpected message was found')
+                break;
+        } // greeting was found
+    </script>
+
+</body>
+
+</html>
