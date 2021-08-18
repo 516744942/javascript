@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>正则方法exec</title>
+</head>
+
+<body>
+    <main>
+        嘻嘻哈哈的王和锋 天天嘻嘻哈哈
+    </main>
+</body>
+<script>
+    const dom = document.querySelector('main');
+    let reg = /嘻嘻哈哈/g;
+    let result = dom.innerHTML.match(reg);
+    // let result2 = reg.exec(dom.innerHTML);
+    // let result3 = reg.exec(dom.innerHTML);
+    console.log('result', result)
+    let count = 0
+    while (res = reg.exec(dom.innerHTML)) {
+        count++
+    }
+    console.log(count)
+</script>
+
+</html>

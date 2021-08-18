@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+
+<body>
+
+    <script>
+        /**
+         * 片段标识符更改时,将触发hashchange事件
+         * 将触发 hashchange事件
+         */
+        window.addEventListener('hashchange', function() {
+            console.log(location.hash)
+            console.log('The hash has changed!')
+        }, false);
+        /**
+         * 或者
+         */
+        function locationHashChanged() {
+            if (location.hash === '#cool-feature') {
+                console.log("You're visiting a cool feature!");
+            }
+        }
+        window.onhashchange = locationHashChanged;
+    </script>
+</body>
+
+</html>

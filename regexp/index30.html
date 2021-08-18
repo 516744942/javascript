@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>批量使用正则完成密码验证</title>
+</head>
+
+<body>
+    <div class="content">
+        wanghufeng.com
+    </div>
+    <input type="text" name="password" value="517844942@qq.com.cn">
+    <span></span>
+
+</body>
+<script>
+    let dom = document.querySelector('[name=password]');
+    dom.addEventListener('keyup', function(e) {
+        const regs = [/^[a-z0-9]{5,9}$/i, /[A-Z]/, /[0-9]/]
+        let state = regs.every(e => e.test(dom.value));
+        console.log(state ? '正确' : '错误');
+    });
+</script>
+
+</html>

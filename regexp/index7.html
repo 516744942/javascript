@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>字符的边界</title>
+</head>
+
+<body>
+    <div class="content">
+        wanghufeng.com
+    </div>
+    <input type="text" name="user">
+    <span></span>
+</body>
+<script>
+    let hd = "33"
+        /**
+         * 数字开始 数字结束
+         */
+    let result = (/^\d+$/).test(hd);
+    console.log(result)
+    let dom1 = document.querySelector('[name=user]');
+    let dom2 = document.querySelector('span')
+    dom1.addEventListener('keyup', function() {
+        let flag = this.value.match(/^[a-z]{3,6}$/i)
+        dom2.innerHTML = flag ? "正确" : "错误"
+    });
+</script>
+
+</html>

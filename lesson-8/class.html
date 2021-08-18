@@ -1,0 +1,656 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>类</title>
+</head>
+
+<body>
+
+
+    <script>
+        /**
+         * 各种策略都有自己的问题
+         * class关键词具有正式定义类的能力
+         */
+        /**
+         * 类定义
+         * 与函数相似
+         * 两种定义
+         * 1 类申明
+         * 2 类表达式
+         */
+        // 类申明  类不能提升 函数可以提升 
+        class Person {}
+        // 类表达式
+        const Animal = class {}
+            /**
+             * 和函数的区别
+             * 1.类申明  类不能提升 函数可以提升 
+             * 2.
+             * 函数作用域
+             * 类 块作用域
+             */
+            /**
+             * 首字母要大写
+             * 构成
+             * 函数方法 constructor
+             * 实例方法 
+             * 获取函数 get MyBaz()
+             * 设置函数 
+             * 静态方法 static myQux(){}
+             */
+        let PersonA = class PersonNameA {
+            identify() {
+                console.log(this)
+                console.log(PersonA)
+            }
+        }
+        let p1 = new PersonA();
+        p1.identify();
+
+        console.log(PersonA.name) // PersonNameA
+        console.log(PersonNameA) //PersonNameA is not defined
+    </script>
+    <script>
+        /**
+         * 类构造函数
+         * constructor 用于在类定义块内部创建类的构造函数
+         * 在使用new操作符创建类时 会调用这个方法
+         * 不定义相当于将构造函数定义为空函数
+         */
+        /**
+         * 1 实例化
+         * 使用new调用类的构造函数会执行如下的操作
+         * 1.在内部创建一个对象
+         * 2. 这个新对象内部的 [[Prototype]]真正被赋值为构造函数的prototype属性
+         * 3. 构造函数内部的this被赋值为这个对象
+         * 4. 执行构造函数内部的代码(给新对象添加属性)
+         * 5. 返回分空对象,则返回该对象,否则返回该对象
+         */
+        class AnimalB {}
+        class PersonB {
+            constructor() {
+                console.log('person ctor')
+            }
+        }
+        class VegetableB {
+            constructor() {
+                this.color = 'orange'
+            }
+        }
+        let aB = new AnimalB()
+        let pB = new PersonB() //person ctor
+
+        let vB = new VegetableB();
+        console.log('实例化实例化', vB); //color: "orange"
+        console.log('实例化实例化', pB); //color: "orange"
+    </script>
+    <script>
+        /**
+         * 传入参数
+         * 
+         */
+        class PersonC {
+            constructor(name) {
+                console.log(arguments.length)
+                this.name = name
+            }
+        }
+        let pC = new PersonC();
+        let pC2 = new PersonC();
+        let pC3 = new PersonC('Jake');
+        console.log(pC) //0
+        console.log(pC2) //0
+        console.log(pC3) //1
+    </script>
+    <script>
+        /**
+         * 默认返回 this对象 
+         * 这个对象会被销毁
+         * 如果是其他的 不会通过instanceof操作符检测出跟类有关联
+         * 因为这个对象的原型指针没有被修改
+         */
+        class PersonD {
+            constructor(override) {
+                this.override = override
+                if (override) {
+                    return {
+                        bar: 'bar'
+                    }
+                }
+            }
+        }
+        let pD1 = new PersonD();
+        let pD2 = new PersonD(true);
+        console.log(pD1) //{override: undefined}
+        console.log(pD1 instanceof PersonD) //true
+        console.log(pD2) // {bar: "bar"}
+        console.log(pD2 instanceof PersonD) // false
+    </script>
+    <script>
+        /**
+         * 类必须使用new
+         * 构造函数不用会以this(window)作为内部对象
+         */
+        let a11 = Animal(); // lass constructor Animal cannot be invoked without 'new'
+    </script>
+    <script>
+        /**
+         * 因此实例化之后可以在实例上引用他
+         */
+        class PersonE {}
+        let pE1 = new PersonE();
+        let pE2 = new pE1.constructor()
+        console.log('pE2', pE2) //PersonE {}
+        p1.constructor(); //Class constructor PersonNameA cannot be invoked without 'new'
+    </script>
+    <script>
+        /**
+         * 把类当成特殊函数
+         * 
+         */
+        console.log('PersonE', typeof PersonE) //function
+        console.log('PersonE', PersonE.prototype) //{constructor: ƒ}constructor: class PersonE__proto__: Object
+        console.log('PersonE', PersonE.prototype.constructor) //class PersonE {}
+    </script>
+    <script>
+        /**
+         * instance检查实例是否在原型链中
+         */
+    </script>
+    <script>
+        /**
+         * 类中定义的constructor 方法不会被当初构造函数
+         */
+        class PersonF {}
+        let pF1 = new PersonF();
+        let pF2 = new PersonF.constructor();
+        console.log(pF1 instanceof PersonF.constructor) //false
+        console.log(pF2 instanceof PersonF.constructor) //true
+    </script>
+    <script>
+        /**
+         * 可以像其他对象或函数引用一样把类作为参数传递
+         */
+        let classList = [
+            class {
+                constructor(id) {
+                    this._id = id;
+                    console.log(`instance ${this._id}`)
+                }
+            }
+        ];
+
+        function createInstance(classDefinition, id) {
+            return new classDefinition(id)
+        }
+        let foo = createInstance(classList[0], 3123); // instance 3123
+    </script>
+    <script>
+        /**
+         * 类也可以立即实例化
+         */
+        let fooA = new class FooA {
+            constructor(x) {
+                console.log(x);
+            }
+        }('bar')
+        console.log(fooA) //bar FooA {}
+    </script>
+    <script>
+        /**
+         * 实例
+         * 原型
+         * 类成员
+         */
+        /**
+         * 1 实例成员
+         * 调用new
+         * 新创建的实例 this
+         * 添加自由属性
+         * 执行完毕之后仍然可以给实例继续添加新成员
+         * 实例唯一
+         * 原型共享
+         */
+        /**
+         * 2 原型方法与访问器
+         * 为瞭在实例中共享方法、
+         * 类定义语法把在类快中定义的方法作为原型方法
+         * 
+         */
+        const PersonGSymbol = Symbol('symbolKey')
+
+        class PersonG {
+            constructor() {
+                console.log('thisthisthis', this)
+            }
+            state = {
+                    a: 1,
+                    b: 2
+                }
+                // locate() {
+                //     console.log('prototype')
+                // }
+            static locate() {
+                console.log('static class', this)
+            }
+            static Number = 2
+            xixihah() {
+
+            }
+
+            set name(newName) {
+                this.name_ = newName
+            }
+            get name() {
+                    return this.name_;
+                }
+                [PersonGSymbol]() {
+                    console.log('PersonGSymbol')
+                }
+        }
+        let perG = new PersonG();
+        perG.name = 'Jake'
+        PersonG.locate()
+        console.log(PersonG.Number)
+        PersonG.Number = 3
+        console.log(PersonG.Number)
+
+        /**
+         * _proto__:
+         * constructor: class Person
+         * locate: ƒ locate()
+         * Symbol(symbolKey): ƒ [PersonGSymbol]()
+         * __proto__: Object
+         */
+        console.log('perG', perG)
+            /**
+             * 静态方法不要存存在类的实例
+             * 每个类上只能有一个静态成员
+             * static 作为前缀。this引用类自身
+             * 静态类方法非常适合作为实例工厂
+             */
+        class PersonMath {
+            constructor(age) {
+                this.age_ = age
+            }
+            sayAge() {
+                console.log(this.age_)
+            }
+            static create() {
+                return new PersonMath(Math.floor(Math.random() * 100))
+            }
+        }
+        console.log('PersonMath', PersonMath.create()) //{age_: 77}
+        PersonG.prototype.locate(); // prototype
+        PersonG.locate(); //静态方 在构造函数上 this为构造函数
+        /**
+         * 4非函数原型和类成员
+         * 虽然定义在并不显示支持在原型或在类上添加成员数据
+         * 但在类定义外部
+         * 可以手动添加
+         */
+        class PersonH {
+            sayName() {
+                console.log(`${PersonH.greeting} ${this.name}`)
+            }
+        }
+        //  在类上定义数据成员
+        PersonH.greeting = 'my name is'
+            //  在原型上定义数据成员
+        PersonH.prototype.name = 'jake'
+        let p = new PersonH();
+        console.log('PersonH', PersonH)
+        console.log('PersonH', p)
+        p.sayName()
+            /**
+             * 5 迭代器与生成器方法
+             * 类定义语法在原型和本身上定义生成器方法
+             */
+        class PersonI {
+            // 原型 生成器方法
+            *
+            createNicknameIterator() {
+                    yield 'Jack'
+                    yield 'Jake'
+                    yield 'J-Dog'
+                }
+                // 类上定义生成器方法
+            static * createJobIterator() {
+                yield 'Butcher'
+                yield 'Baker'
+                yield 'Candlestick maker'
+            }
+        }
+        const perI = PersonI.createJobIterator();
+        console.log('perI', perI.next().value) //perI Butcher
+        console.log('perI', perI.next().value) //perI Baker
+        console.log('perI', perI.next().value) //perI Candlestick maker
+        console.log('perI', perI.next().value) //perI undefined
+        const pI = new PersonI();
+        const nicknameIter = pI.createNicknameIterator();
+        console.log('nicknameIter', nicknameIter.next().value) //Jack
+        console.log('nicknameIter', nicknameIter.next().value) //Jake
+        console.log('nicknameIter', nicknameIter.next().value) // J-Dog
+    </script>
+    <script>
+        /**
+         * 添加一个默认的迭代器
+         * 可迭代对象
+         */
+        class PersonJ {
+            constructor() {
+                this.nicknames = ['Jack', 'Jake', 'J-Dog']
+            } * [Symbol.iterator]() {
+                yield* this.nicknames.entries();
+            }
+        }
+        let perJ = new PersonJ();
+        for (const [idx, nickname] of perJ) {
+            console.log(idx)
+            console.log(nickname)
+        }
+        for (const iterator of perJ) {
+            console.log(iterator)
+        }
+    </script>
+    <script>
+        /**
+         * 也可以只返回迭代器实例
+         */
+        class PersonK {
+            constructor() {
+                    this.nicknames = ['Jack', 'Jake', 'J-Dog']
+                }
+                [Symbol.iterator]() {
+                    return this.nicknames.entries();
+                }
+        }
+        let perK = new PersonK();
+        for (const [idx, nickname] of perK) {
+            console.log(idx)
+            console.log(nickname)
+        }
+        for (const iterator of perK) {
+            console.log(iterator)
+        }
+    </script>
+    <script>
+        /**
+         * 继承
+         * 背后使用的依旧是原型链
+         * es6 支持单继承 使用extends关键词
+         * 就可以继承任何拥有[[Construct]]和原型对象
+         * 意味着不仅可以继承一个类,也可以继承普通的构造函数(保持向后兼容)
+         *
+         */
+        class VehicleA {};
+        class BusA extends VehicleA {}
+        let b = new BusA();
+        console.log(b)
+        console.log(b instanceof BusA)
+        console.log(b instanceof VehicleA)
+            /**
+             * 类和原型上定义的方法都会带到派生类
+             */
+        class VehicleB {
+            identifyPrototype(id) {
+                console.log(id, this)
+            }
+            static identifyClass(id) {
+                console.log(id, this)
+            }
+        };
+        class BusB extends VehicleB {}
+        let vB1 = new VehicleB()
+        let BB1 = new BusB()
+        console.log('VehicleB', vB1);
+        console.log('BusB', BB1);
+    </script>
+    <script>
+        /**
+         * 构造函数
+         * homeObject
+         * 和super()
+         */
+        /**
+         * 派生类的方法可以通过super关键词引用他们的原型
+         * 这个关键词只能在派生类中使用
+         * 而且仅限于类构造函数、实例方法和静态方法内部
+         * 在类构造函数中使用super可以调用父类构造函数
+         */
+        class VehicleC {
+            constructor() {
+                this.hasEngin = true
+            }
+            identifyPrototype(id) {
+                console.log(id, this)
+            }
+            static identifyClass(id) {
+                console.log(id, this)
+            }
+        }
+        class BusC extends VehicleC {
+            constructor() {
+                super()
+                console.log(this instanceof VehicleC)
+                console.log(this)
+            }
+        }
+        new BusC()
+            /**
+             * 在静态方法中可以通过super调用继承的类上定义的静态方法
+             */
+        class VehicleD {
+            static identify() {
+                console.log('VehicleD')
+            }
+        }
+        class BusD extends VehicleD {
+            static identify() {
+                super.identify()
+            }
+        }
+        let busD = new BusD()
+        console.log('busD', busD);
+    </script>
+    <script>
+        /**
+         * 在使用super时要注意几个问题
+         * 1. super只能在派生类构造函数和静态方法中使用
+         * 2. 不能单独引用super关键词,要么用它调用构造函数,要么用它引用静态方法
+         * 3. 调用super()会调用父类构造函数,并且返回实例复制给this
+         * 4. super()的行为如同调用构造函数,如果需要父类构造函数传参数,则需要手动传入
+         * 5. 如果没有定义类构造函数,在实例化派生类时会调用super(),而且会传入所有参数
+         * 6. 在类构造函数中,不能在调用super()之前饮用this
+         * 7. 如果在派生类中显示定义了构造函数,要么必须在其中调用super(),要么必须在其中返回一个对象
+         */
+        // 4
+        class VehicleE {
+            constructor(id) {
+                this.licensePlate = id
+            }
+        }
+        class BusE extends VehicleE {
+            constructor(id) {
+                super(id)
+            }
+        }
+        // 5
+        class BusE1 extends VehicleE {
+            constructor(id) {
+                super(id)
+            }
+        }
+        let busE = new BusE('123123cs');
+        let busE1 = new BusE1('123123cs');
+        console.log(busE)
+        console.log(busE1)
+            // 7
+        class BusF extends VehicleE {
+            constructor() {
+                super()
+            }
+        }
+        class BusF1 extends VehicleE {
+            constructor() {
+                return {}
+            }
+        }
+        /**
+         * 抽象基类(本身不能被实例化)(new.target)
+         * 有时候可能需要定义这样一个类
+         * 它可供其他类继承
+         * 但本身不会被实例化
+         * new.target很容易现实
+         * new.target保存通过new关键词调用的类或函数
+         * 通过在实例化时检测new.target是不是抽象基类是不是抽象基类
+         * 可以阻止对抽象基类的实例化
+         */
+        class VehicleF {
+            constructor(id) {
+                console.log('new.target', new.target);
+                if (new.target === VehicleF) {
+                    throw new Error('VehicleF cannot be direct')
+                }
+            }
+        }
+        class BusQ extends VehicleF {}
+        new BusQ()
+        new VehicleF()
+    </script>
+    <script>
+        /**
+         * 可要求某个派生类必须定义某个方法
+         * 因为原型方法在调用类构造函数之前就已经存在了
+         * 
+         */
+        class VehicleQ {
+            constructor(id) {
+                if (new.target === VehicleF) {
+                    throw new Error('VehicleF cannot be direct')
+                }
+                if (!this.foo) {
+                    throw new Error('inheriting class must define foo()')
+                }
+                console.log('success')
+            }
+        }
+        class BusW extends VehicleQ {
+            foo() {}
+        }
+        class vanW extends VehicleQ {}
+        new BusW()
+        new vanW() //inheriting class must define foo()
+    </script>
+    <script>
+        /**
+         * 继承内置类型
+         * 开发者可以方便地扩展内置类型提供顺畅的机制
+         * 开发者可以方便地扩展内置类型
+         * 
+         */
+        class SuperArrayA extends Array {
+            shuffle() {
+                // 洗牌算法
+                console.log(this)
+                for (let i = this.length - 1; i > 0; i--) {
+                    const j = Math.floor(Math.random() * (i + 1));
+                    [this[i], this[j]] = [this[j], this[i]]
+                }
+
+            }
+        }
+        let a = new SuperArrayA(1, 2, 3, 4, 5);
+        console.log(a instanceof Array) // true
+        console.log(a instanceof SuperArrayA) // true
+        console.log(a) //[1, 2, 3, 4, 5]
+        console.log(a.shuffle())
+        console.log(a) //[3, 4, 1, 2, 5]
+    </script>
+    <script>
+        /**
+         * 有些内置类型的方法会返回新实例。
+         * 默认情况下,返回实例的类型与原始类型的类型是一致
+         * 
+         */
+        let a1 = new SuperArrayA(1, 2, 3, 4, 5, 6, 7, 8);
+        let a2 = a1.filter(x => !!(x % 2))
+        console.log(a1) //
+        console.log(a2) //[1,3,5,7]
+            /**
+             * 向组织可以使用Symbol.species访问器(物种符号)
+             * 这个访问器决定在创建返回的实例时使用的类
+             */
+        class SuperArrayB extends Array {
+            static get[Symbol.species]() {
+                return Array
+            }
+        }
+        let ab1 = new SuperArrayB(1, 2, 3, 4, 5, 6, 7, 8);
+        let ab2 = a1.filter(x => !!(x % 2));
+        console.log('ab2', ab2) //[1, 3, 5, 7] 
+        console.log('ab1', ab1 instanceof SuperArrayB) //true
+        console.log('ab2', ab2 instanceof SuperArrayB) //false
+        console.log('ab2', ab2 instanceof Array) //true
+    </script>
+    <script>
+        /**
+         * 类混入
+         * 把不同类的行为集中到一个类是常见的JavaScript模式
+         * Object.assign()混入对象行为而设计 混入多个对象的属性
+         */
+        class VehicleZ {}
+
+        function getParentClass() {
+            console.log('evaluated expression');
+            return VehicleZ;
+        }
+        class BusZ extends getParentClass() {}
+            /**
+             * 混入模式 可以在一个表达式中连缀多个混入元素来实现
+             * 这个表达式最终会解析为一个可以被继承的类
+             * 如果Person 类需要组合A、B、C 则需要某种机制实现 
+             * B继承A
+             * C继承B
+             * Person继承C
+             * 一组可嵌套的函数
+             * 每个函数别分接受一个超类作为参数
+             * 混入定义为这个参数的子类,并返回这个类
+             * 连缀调用,最终组合成超类表达式
+             */
+        class VehicleR {}
+        let FooMixin = (superClass) => class extends superClass {
+            foo() {
+                console.log('foo')
+            }
+        }
+        let BarMixin = (superClass) => class extends superClass {
+            bar() {
+                console.log('bar')
+            }
+        }
+        let BazMixin = (superClass) => class extends superClass {
+            baz() {
+                console.log('baz')
+            }
+        }
+        class BusR extends FooMixin(BarMixin(BazMixin(VehicleR))) {}
+        let bR1 = new BusR()
+        console.log(bR1); //  BusR foo() bar() baz()
+        // 辅助函数
+        function mixClass(BaseClass, ...Mixins) {
+            return Mixins.reduce((accumulator, current) => current(accumulator), BaseClass)
+        }
+        let Mixins = [FooMixin, BarMixin, BazMixin]
+        class BusT extends mixClass(VehicleR, ...Mixins) {};
+        let bT1 = new BusT();
+        console.log(bT1); //  BusR baz() bar() foo()
+    </script>
+</body>
+
+</html>

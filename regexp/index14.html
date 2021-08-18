@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>汉子与其他字符</title>
+</head>
+
+<body>
+    <div class="content">
+        wanghufeng.com
+    </div>
+    <input type="text" name="user">
+    <span></span>
+</body>
+<script>
+    let hf = '王和锋wanghefeng2021.,水电费!';
+    let result = hf.match(/\p{L}/gu) //英文汉子
+    let result1 = hf.match(/\p{P}/gu) //逗号等字符
+    let result2 = hf.match(/\p{sc=Han}/gu) //汉子字符
+    let result4 = hf.matchAll(/\p{L}/gu) //英文汉子
+    console.log(result)
+    console.log(result1)
+    console.log(result2)
+    console.log(result4)
+    for (const iterator of result) {
+        console.log('iterator', iterator)
+    }
+
+    let str = "xy";
+    console.log(str.match(/[xy]/ug))
+</script>
+
+</html>

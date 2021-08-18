@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>邮箱验证中原子组的使用</title>
+</head>
+
+<body>
+    <div class="content">
+        wanghufeng.com
+    </div>
+    <input type="text" name="email" value="517844942@qq.com.cn">
+    <span></span>
+
+</body>
+<script>
+    let email = document.querySelector('[name=email]');
+    let reg = /^[\w-]+@([\w-]+\.)+(com|org|cc|cn|net)$/i;
+    email.addEventListener('keyup', function() {
+        let result = reg.test(this.value);
+        console.log(reg.test(this.value))
+        document.querySelector('span').innerHTML = reg.test(this.value) ? '正确' : '错误'
+    })
+    let result = email.value.match(reg);
+    console.log('result', result)
+</script>
+
+</html>

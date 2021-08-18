@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>$符在正则替换中使用</title>
+</head>
+
+<body>
+
+</body>
+<script>
+    let tel = `2030/12/18`;
+    let result = tel.replace(/\//g, '-');
+    console.log(result)
+    let hf1 = "(010)9999999 (020)88888888";
+    let reg = /\((\d{3,4})\)(\d{7,9})/g
+    console.log(hf1.replace(reg, '$1-$2'));
+    // $& 当前 $`左边 $'
+    let hf2 = "=王和锋="
+    console.log(hf2.replace(/王和锋/, "$`$`$&$'$'"))
+        /**
+         *  $` $'
+         */
+</script>
+
+</html>

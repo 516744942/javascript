@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>数字和空白字符串</title>
+</head>
+
+<body>
+    <div class="content">
+        wanghufeng.com
+    </div>
+    <input type="text" name="user">
+    <span></span>
+</body>
+<script>
+    // let hd = "wanghefeng.2021";
+    // console.log(hd.match(/\d/g))
+    let hd = `
+      张三:010-999999999,李四::020-88888888
+    `;
+    console.log(hd.match(/\d{3}-\d{8,9}/g))
+    console.log(/\S/.test(" \nhd"))
+    console.log(hd.match(/[^-\d:,\s]+/g))
+
+    let hd1 = "wanghefeng.2021";
+    console.log(hd1.match(/\D+/g)) //wanghefeng.
+</script>
+
+</html>

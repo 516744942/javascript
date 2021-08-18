@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>使用exec完成全局匹配</title>
+</head>
+
+<body>
+
+</body>
+<script>
+    let hf = 'wanghefeng.con';
+    console.log(hf.search('h'));
+    let hf1 = `
+        https://wanghefeng.com
+        https://wanghefeng.com.cn
+        https://xixihah.com.cn
+    `;
+    let reg = /https?:\/\/(\w+\.)?(\w+\.)+(com|cn|org|cc)/ig
+    console.log(hf1.match(reg))
+</script>
+
+</html>

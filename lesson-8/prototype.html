@@ -16,22 +16,30 @@
          * 这个属性是一个对象
          * 包含应该由特定引用类型的实例共享的属性和方法
          */
-        function Person() {};
+        function Person(name) {
+            this.name = name
+        };
         // let Person = function () {}
+        console.log('原型属性')
         Person.prototype.name = "Nicholas";
         Person.prototype.age = 29;
         Person.prototype.job = "software Engineer";
         Person.prototype.sayName = function() {
             console.log(this.name)
         }
-        let person1 = new Person();
+        let person1 = new Person("嘻嘻哈哈");
+        person1.haha = "哈哈哈"
         person1.sayName();
         let person2 = new Person();
         person2.sayName();
         console.log('Person', Person) //Person ƒ Person() {}
-        console.log('Person', Person.constructor) //Person ƒ Function() { [native code] }
+        console.log('Person1', person1) //[[Prototype]]指针构造函数的原型对象 对象上暴露__proto__
+        console.log('Person实例原型', Person.prototype) //Person ƒ Person() {}
+        console.log('Person构造函数的原型对象', person1.__proto__) //Person ƒ Person() {}
+        console.dir('Person构造函数', Person.constructor) //Person ƒ Function() { [native code] }
         console.log('Person', Person.prototype) //age: 29 job: "software Engineer" name: "Nicholas" sayName: ƒ ()
         console.log(person1.sayName === person2.sayName); //true
+        console.log('Object.prototype对象原型', Object.prototype.isPrototypeOf(person1)); //true
     </script>
     <script>
         /**
@@ -53,6 +61,7 @@
         }
         console.log(typeof Person1.prototype) // object
         console.log(Person2.prototype) // object //{constructor: ƒ}constructor: ƒ ()__proto__: Object
+        console.log(Person1.prototype.__proto__) // 原型的 是Object的实例 所以它的__proto__指向Object原型
         console.log(Person1.prototype.__proto__ === Object.prototype) //true 正常原型链都会终止于Object的原型对象
         console.log(Person1.prototype.__proto__.constructor === Object) //true 正常原型链都会终止于Object的原型对象
         console.log(Person1.prototype.__proto__.__proto__); //true 正常原型链都会终止于Object的原型对象
@@ -65,13 +74,18 @@
          * 链到原型对象的constructor 指向构造函数
          * 构造函数的 prototype指向__proto__
          * 可以isPrototypeOf方法确定两个对象之间的关系
-         * 
+         *  person1.__proto__ ===Object.getPrototypeOf(person1)
          */
         let state1 = Person.prototype.isPrototypeOf(person1)
         let state2 = Person.prototype.isPrototypeOf(person2)
+        let state3 = Object.prototype.isPrototypeOf(person2)
         console.log('state1', state1); // true // 有链接指向原型
         console.log('state2', state2); //  true //  有链接指向圆型
-        console.log(Object.getPrototypeOf(person1)) //返回内部参数 [[Prototype]]
+        console.log('state3', state3); //  true //  有链接指向圆型
+        console.log('person1', person1)
+        console.log('person1', person1.__proto__)
+        console.log('Object.getPrototypeOf', Object.getPrototypeOf(person1)) //返回内部参数 [[Prototype]]
+        console.log('Object.getPrototypeOf', person1.__proto__ === Object.getPrototypeOf(person1)) //返回内部参数 [[Prototype]]
             /**
              * age: 29
              * job: "software Engineer"
@@ -153,10 +167,12 @@
          * 使用方法
          * for in循环使用 
          * 无论在实例还是在原型上我
+         * hasPrototypeProperty 原型具有的属性 实例有属性就会遮蔽
          * 
          */
         let person4 = new Person();
         console.log('inininin inininininininininininin inininininininininininin inininininininin')
+        console.log('person4', person4)
         console.log('name' in person4) //true
         console.log(person4.hasOwnProperty('name')) // 上面是true false 说明是一个原型属性
             // console.log(hasPrototypeProperty(person4, 'name'))
@@ -178,6 +194,7 @@
          */
         console.log('object11', Object.getOwnPropertyDescriptor(Person.prototype, 'constructor'))
 
+        console.log('keys', Object.keys(person4)) //["constructor", "name", "age", "job", "sayName"]
         console.log('getOwnPropertyNames', Object.getOwnPropertyNames(Person.prototype)) //["constructor", "name", "age", "job", "sayName"]
         console.log('getOwnPropertySymbols', Object.getOwnPropertySymbols(Person.prototype)) //[]  针对符号
     </script>
@@ -323,6 +340,7 @@
         let instance222 = new SuperType();
         console.log('原型链 instance', instance.getSuperValue()) //instance true
         console.log('原型链 instance', instance) //instance true
+        console.log('原型链 constructor', instance.constructor()) //instance true
         console.log('原型链 instance', instance.__proto__) //  {property: true,getSubValue: ƒ ()}
         console.log('原型链 instance', instance.__proto__.__proto__) //  {getSuperValue: ƒ ()}
         console.log('原型链 instance222', instance222) //  {property: true}
@@ -500,6 +518,7 @@
         }
         let instanceE1 = new SubtypeE('Nicholas', 29);
         instanceE1.colors.push('black');
+        console.log('组合继承', instanceE1); //'red', 'blue', 'green',black
         console.log(instanceE1.colors); //'red', 'blue', 'green',black
         instanceE1.sayName(); // 'Nicholas'
         instanceE1.sayAge(); // 29
@@ -509,7 +528,109 @@
         instanceE2.sayName(); // 'Greg'
         instanceE2.sayAge(); // 27
     </script>
+    <script>
+        /**
+         * 原型链继承
+         * Object.create(原型对象,?新对象定义而外的属性) 将原型继承规范化
+         * 第二个参数和Object.defineProperties的第二个参数一样
+         * 　
+         */
+        let personQ = {
+            name: 'Nicholas',
+            friends: ["Shelby", "Court", "Van"]
+        }
+        let anotherPerson = Object.create(personQ)
+            /**
+             *  __proto__:
+             *  friends: (3) ["Shelby", "Court", "Van"]
+             *  name: "Nicholas"
+             */
+        console.log('anotherPerson', anotherPerson)
+        let anotherPerson2 = Object.create(personQ, {
+            value: {
+                value: "Greg"
+            }
+        });
+        /**
+         * value: "Greg"
+         * __proto__: Object
+         */
+        console.log('anotherPerson2', anotherPerson2)
+            /**
+             * configurable: false
+             *   enumerable: false
+             *  value: "Greg"
+             *    writable: false
+             */
+        console.log('anotherPerson2', Object.getOwnPropertyDescriptor(anotherPerson2, 'value'))
+    </script>
+    <script>
+        /**
+         * 寄生式继承
+         * 与原生式继承比较接近的一种继承方式是寄生式继承
+         * 思路类似构造函数和工厂模式
+         * 
+         */
+        function object1(o) {
+            function F() {}
+            F.prototype = o;
+            return new F();
+        }
 
+        function createAnother(original) {
+            let clone = object1(original)
+            clone.sayHi = function() { //通过调用函数创建一个新对象
+                console.log('hi'); // 以某种方式增强这个对象
+            }
+            return clone //返回这个对象
+        }
+        let personW = {
+            name: 'Nicholas',
+            friends: ["Shelby", "Court", "Van"]
+        }
+        let anotherPersonW1 = createAnother(personW);
+        console.log('createAnother', anotherPersonW1)
+        console.log('anotherPersonW1', anotherPersonW1.sayHi());
+    </script>
+    <script>
+        /**
+         * 寄生式组合继承
+         * 父类构造函数始终会被调用两次
+         * 一次是创建子类原型时调用
+         * 另一次是在子类构造函数中调用
+         * 
+         */
+        function SuperTypeF(name) {
+            this.name = name;
+            this.colors = ['red', 'blue', 'green']
+        }
+        SuperTypeF.prototype.sayName = function() {
+            console.log(this.name)
+        }
+
+        function SubtypeF(name, age) {
+            SuperTypeF.call(this, 'Nicholas'); //第二次调用SuperType()
+            this.age = 29
+        }
+        SubtypeF.prototype = new SuperTypeF(); //  第一次创建 SuperType
+        SubtypeF.prototype.constructor = SubtypeF;
+        SubtypeF.prototype.sayAge = function() {
+            console.log(this.age)
+        }
+        const insatnceF = new SubtypeF('哈哈', 29);
+        /**
+         *   age: 29
+         *   colors: (3) ["red", "blue", "green"]
+         *   name: "Nicholas"
+         *   __proto__: SuperTypeF
+         *   colors: (3) ["red", "blue", "green"]
+         *   constructor: ƒ SubtypeF(name, age)
+         *   name: undefined
+         *   sayAge: ƒ ()
+         * 
+         */
+        console.log('insatnceF', insatnceF);
+    </script>
 
 </body>
 

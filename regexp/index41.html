@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>原子组别名</title>
+</head>
+
+<body>
+
+</body>
+<script>
+    let hf = `
+        <h1>wanghefeng</h1>
+        <h2>asdasd.com</h2>
+        <h3>wangefeng.com</h3>
+    `;
+    /**
+     * 别名 con
+     */
+    const reg = /<(h[1-6])>(?<con>.*?)<\/\1>/ig;
+    // console.log(hf.replace(reg, "<h4>$<con></h4>"));
+
+    let str = "?a123=1asd&b=2"
+    let reg = /(?<key>\w+)=(?<value>\w+)/g
+
+    let reg1 = /(?<key>\w+?)=(?<value>\w+)/g
+    let result = str.matchAll(reg1);
+    let obj = {}
+    for (const iterator of result) {
+        console.log(iterator)
+        obj[iterator.groups.key] = iterator.groups.value
+    }
+    console.log(obj)
+</script>
+
+</html>

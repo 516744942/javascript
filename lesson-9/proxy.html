@@ -1,0 +1,868 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>代理和反射</title>
+</head>
+
+<body>
+
+    <script>
+        /**
+         * 代理的基础
+         * 代理捕获器与反射方法
+         * 代理模式
+         * 
+         */
+    </script>
+    <script>
+        /**
+         *  1.代理的基础
+         */
+        /**
+         * 创建空代理
+         * 使用Proxy构造函数创建的 
+         * 目标对象和处理程序对象
+         * Proxy(object,dealObject) 缺少任何一个都会TypeError
+         */
+        const targetA = {
+            id: 'target'
+        }
+        const handlerA = {};
+        const proxyA = new Proxy(targetA, handlerA);
+        console.log(proxyA)
+            /**
+             * [[Handler]]: Object
+             * [[Target]]: Object
+             * [[IsRevoked]]: false  是否被撤销
+             */
+            // id属性会访问同一个值
+        console.log(targetA.id)
+        console.log(proxyA.id) //target
+
+        // 给目标属性赋值会反映在两个对象上
+        // 因为这个赋值会转移到目标对象
+        proxyA.id = "bar"
+        console.log(targetA.id) //bar
+        console.log(proxyA.id) //bar
+            // hasOwnProperty() 方法在两个地方
+            // 都会应用到目标对象
+        console.log(targetA.hasOwnProperty('id')) //true 对象是否自己的键
+        console.log(proxyA.hasOwnProperty('id')) // true对象是否自己的键
+            /**
+             * Proxy.property是undefined 因此不能使用instance
+             */
+            // console.log('targetA', targetA instanceof Proxy) 
+            // console.log('proxyA', proxyA instanceof Proxy) 
+            // Function has non-object prototype 'undefined' in instanceof check
+            // at Function.[Symbol.hasInstance] (<anonymous>)
+    </script>
+    <script>
+        /**
+         *  2 定义捕获器
+         *  使用代理的主要目的是可以定义捕获器
+         *  处理程序对象中基本操作的拦截器
+         *  每个处理对象可以包含零个或多个捕获器
+         *  可以直接或间接在代理对上上调用
+         *  每次在代理对象上调用这些基本操作时,
+         *  代理可以在这些操作传播到目标对象之前先调用捕获器函数
+         *  从而修改拦截并修改相应的行为
+         */
+        /**
+         * get()捕获器
+         * proxy[property]
+         * proxy.property 或Object.create(proxy[property])等操作都会出发基本get操作()
+         */
+        const targetB = {
+            foo: 'bar',
+            foo1: 'bar1',
+
+        }
+        const handlerB = {
+            // 捕获器在处理程序对象中以方法名为键
+            get() {
+                return 'handel override'
+            }
+        };
+        const proxyB = new Proxy(targetB, handlerB);
+        console.log('proxyB', proxyB)
+        console.log('targetB', targetB.foo)
+        console.log('proxyB', proxyB.foo) // ‘handel override’
+        console.log('proxyB', proxyB.foo1) // ‘handel override’
+        console.log('proxyB', proxyB['foo1']) // ‘handel override’
+        console.log('proxyB', Object.create(proxyB)['foo']) // ‘handel override’
+    </script>
+    <script>
+        /**
+         * 3 捕获器参数和反射API
+         * 所有捕获器都可以访问相应的参数
+         * 基于这些参数一重建被捕获的原始行为
+         * 比如get()捕获器会接受到目标对象
+         * 要查询 目标对象(捕获目标) 属性和代理对象三个参数(trapTarget,property,receiver)
+         * 
+         */
+        const targetC = {
+            foo: 'bar',
+            foo1: 'bar1',
+
+        }
+        const handlerC = {
+            // 捕获器在处理程序对象中以方法名为键
+            get(trapTarget, property, receiver) {
+                console.log(trapTarget === targetC) // true
+                console.log(property) //foo
+                console.log(receiver === proxyC) //代理对象
+            }
+        };
+        const proxyC = new Proxy(targetC, handlerC);
+        proxyC.foo
+            //有瞭这些参数,就可以重建被捕获方法的原始行为
+            /**
+             * 所有捕获器都可以基于自己的参数重建原始操作
+             * 但并非所有捕获器行为都想get()那么简单
+             * 调用全局Reflect对象上(封装瞭原始行为)的同名方法来轻松重建
+             */
+        const targetD = {
+            foo: 'bar',
+
+        }
+        const handlerD = {
+            // 捕获器在处理程序对象中以方法名为键
+            get(trapTarget, property, receiver) {
+                    console.log(111)
+                    trapTarget.foo = "123"
+                    return Reflect.get(...arguments)
+
+                }
+                // 甚至可以更简单
+                // get: Reflect.get
+        };
+        const proxyD = new Proxy(targetD, handlerD);
+        console.log(proxyD.foo) // bar
+        console.log(targetD.foo) //bar
+        console.log(targetD) //bar
+    </script>
+    <script>
+        /**
+         * 事实上
+         * 如果真想创建一个可以捕获所有方法
+         * 然后将每个方法转发给对应反射API的空代理
+         * 那么甚至不需要定义处理程序对象
+         */
+        const targetE = {
+            foo: 'bar',
+        };
+        const proxyE = new Proxy(targetE, Reflect);
+        console.log('targetE', targetE.foo)
+        console.log('proxyE', proxyE.foo)
+    </script>
+    <script>
+        /**
+         * 反射API为开发者准备好瞭样本代码
+         * 在次基础上开发者可以用最少的代码修改捕获的方法
+         * 下面的代码在某个属性被访问时,
+         * 会对返回的值进行一番修饰
+         *  
+         */
+        const targetF = {
+            foo: 'bar',
+            baa: 'qu',
+        }
+        const handlerF = {
+            get(trapTarget, property, receiver) {
+                let decoration = '';
+                if (property === 'foo') {
+                    decoration = '!!!'
+                }
+                return Reflect.get(...arguments) + decoration
+            }
+        }
+        const proxyF = new Proxy(targetF, handlerF);
+        console.log(proxyF.foo) //bar!!!
+    </script>
+    <script>
+        /**
+         *   捕获不变式
+         *   作用: 捕获器几乎可以改变所有基本方法的行为
+         *    但也不是没有限制
+         *   基础内容: 每个捕获的方法都知道目标对象上下文、捕获函数签名
+         *    必须遵循捕获不变式,捕获器不变式因方法不同而异
+         *   作用:通常都为防止捕获器定义出现过于反常的行为
+         *   例子:
+         *   目标对象(target)不可配置且不可写的数据属性
+         *   捕获器返回一个与该属性不同的值时,会抛出TypeError
+         */
+        const targetG = {};
+        Object.defineProperty(targetG, 'foo', {
+            configurable: false,
+            writable: false,
+            value: 'bar'
+        })
+        const handlerG = {
+            get() {
+                return 'qux'
+            }
+        }
+        const proxyG = new Proxy(targetG, handlerG)
+        console.log(proxyG.foo); // TypeError
+    </script>
+    <script>
+        /**
+         * 可撤销代理
+         * 需求: 有时候可能需要中断代理对象与目标对象之间的联系。
+         * 原因: 对于使用new Proxy()创建的普通代理来说
+         * 这种联系会在代理对象的生命周期内一直持续存在
+         * 解决方案: Proxy也会暴露瞭revocable()方法  revocable(可撤销的)
+         * 作用:这个方法支持撤销代理对象与目标对象的关联
+         * 结果: 撤销代理的操作是不可逆的
+         *      而且撤销函数revoke()是幂等的,调用多少次的结果都一样 revoke撤销
+         *      撤销代理之后再待用代理会抛出TypeError
+         */
+        const targetH = {
+            foo: 'bar'
+        };
+        const handlerH = {
+            get() {
+                return 'intercepted'
+            }
+        }
+        if (true) {
+            const {
+                proxy,
+                revoke
+            } = Proxy.revocable(targetH, handlerH);
+            console.log(Proxy.revocable(targetH, handlerH))
+            console.log(proxy, revoke)
+            console.log(proxy.foo) // intercepted
+            console.log(targetH.foo) // bar
+            revoke();
+            console.log(proxy.foo) //typeError
+        }
+        /**
+         * 实用反射API
+         * 某些情况下应该优先使用反射API,这是有些利用的
+         * 1.  反射API与对象API
+         * (1) 反射API并不限于捕获处理程序
+         * (2) 大多数反射API方法在Object类型上有对应的方法
+         * 通常 , Object上的方法适用于通用程序,而反射方法适用于细粒度的对象控制与操作
+         */
+    </script>
+    <script>
+        /**
+         * 2状态标记
+         * 很多反射方法返回称为状态标记的布尔值
+         * 表示意图执行的操作是否成功
+         * 有时候,状态标记比那些返回修改后的对象或抛出错误(取决于)
+         */
+        const o = {};
+        const o1 = {};
+        try {
+            Object.defineProperty(o, 'foo', 'bar')
+            console.log('success')
+        } catch (e) {
+            console.log('failure')
+        }
+        console.log('o1', o1)
+        if (
+            Reflect.defineProperty(
+                (o1, 'foo', {
+                    value: 'bar'
+                })
+            )) {
+            console.log('success')
+        } else {
+            console.log('failure')
+        }
+        /**
+         * 会提供状态标记
+         * Reflect.defineProperty()
+         * Reflect.preventExtension()
+         * Reflect.setPrototypeOf()
+         * Reflect.set()
+         * Reflect.deleteProperty()
+         * 
+         */
+    </script>
+    <script>
+        /**
+         * 3 用一等函数替代操作符
+         * 以下反射方法提供只有通过操作符才能完成的操作
+         * Reflect.get():可以替代对象属性访问操作符
+         * Reflect.set():可以替代= 赋值操作符
+         * Reflect.has():可以替代in操作符或with()
+         * Reflect.deleteProperty(): 可以替代delete操作符
+         * Reflect.construct(): 可以替代new操作符
+         * 
+         */
+    </script>
+    <script>
+        /**
+         *  4.安全地应用函数
+         *  在通过apply方法调用函数时,
+         *  被调用的函数可能也可以定义了自己的apply属性
+         *  为了绕过这个问题,可以定义在Function原型上的apply方法
+         *  
+         *  
+         */
+        Function.prototype.apply.call(myFunc, thisVal, argumentsList);
+        /**
+         * 这种可怕的代码完全可以使用Reflect.apply来避免
+         */
+        Reflect.apply(myFunc, thisVal, argumentsList);
+    </script>
+    <script>
+        /**
+         * 代理另一个代理
+         * 代理可以拦截反射API的操作,而这就意味着完全可以创建一个代理
+         * 通过它去代理另一个代理
+         * 这样就可以在一个目标对象之上构建多层拦截网
+         * 
+         */
+        const targetJ = {
+            foo: 'bar'
+        };
+        const firstProxyJ = new Proxy(targetJ, {
+            get() {
+                console.log('first proxy');
+                return Reflect.get(...arguments)
+            }
+        });
+        const secondProxy = new Proxy(firstProxyJ, {
+            get() {
+                console.log('second proxy');
+                return Reflect.get(...arguments)
+            }
+        });
+        console.log(secondProxy.foo)
+            // second proxy
+            // first proxy
+            // bar
+    </script>
+    <script>
+        /**
+         * 代理的问题与不足
+         * 1 代理中的this
+         */
+        /**
+         * 代理潜在的一个问题来源是this值
+         * 我们知道,方法中的this通常指向待用这个方法的对象
+         * 
+         */
+        const targetK = {
+            thisValEqualsProxy() {
+                console.log(this)
+                return this === proxyK
+            }
+        }
+        const proxyK = new Proxy(targetK, {})
+        console.log(targetK.thisValEqualsProxy()); //false
+        console.log(proxyK.thisValEqualsProxy()); // true
+        const vm1 = new WeakMap();
+        class User {
+            constructor(userId) {
+                vm1.set(this, userId)
+            }
+            set id(userId) {
+                vm1.set(this, userId)
+            }
+            get id() {
+                console.log(this)
+                return vm1.get(this)
+            }
+        }
+        const user1 = new User(123);
+        console.log(user1.id) //123
+        const userInstanceProxy = new Proxy(user1, {});
+        console.log(userInstanceProxy.id) // undefined
+            /**
+             * User实例一开始使用目标对象作为wekMap的键
+             * 代理对象却尝试从自身取得这个实例
+             * 代理改为User类本身
+             * 之后再会以代理作为WeakMap的键了
+             */
+        const UserClassProxy = new Proxy(User, {})
+        const proxyUser = new UserClassProxy(235);
+        console.log(proxyUser.id) //User {} 235
+    </script>
+    <script>
+        /**
+         * 2 代理与内部槽位
+         * 代理与内置引用类型
+         * Date类型 方法的执行依赖this值上的内部槽位[[NumberDate]]
+         * 代理对象上不存在这个内部槽位,这个槽位不能用过普通的get和set操作访问到m
+         * 所以会抛出TypeError
+         */
+        const targeL = new Date();
+        const proxyL = new Proxy(targeL, {});
+        console.log(proxyL instanceof Date); // true
+        proxyL.getDate(); // TypeError: this is not a Date object.
+    </script>
+    <script>
+        /**
+         * 代理捕获与反射方法
+         * 13种捕获方法
+         */
+
+        /**
+         * 1 get()
+         * 捕获器会在获取属性的操作中被调用
+         * 对应的放射API为Reflect.get()
+         */
+        const targetQ = {};
+        const proxyQ = new Proxy(
+            targetQ, {
+                get(target, property, receiver) {
+                    console.log('get()');
+                    return Reflect.get(...arguments);
+                }
+            });
+        proxyQ.foo //set()
+        proxyQ.property //set()
+        proxyQ['foo'] //set()
+        Object.create(proxyQ)['property']
+        Reflect.get(proxyQ, 'foo')
+        console.log('proxyQ', proxyQ);
+        /**
+         * 1 返回值没有限制
+         * 2 拦截器的操作
+         *   proxy.property
+         *   proxy[property]
+         *   Object.create(proxy)[property];
+         *   Reflect.get(target, property, receiver)
+         */
+        /**
+         *  3 捕获器处理程序参数
+         *   target: 目标对象
+         *   property: 引用的目标对象上的字符串键属性
+         *   receiver: 代理对象或继承对象的对象
+         */
+        /**
+         *  4 捕获不变式  如果target.property不可写且不可配置, 则处理程序返回的值必须与target.property匹配
+         *  如果target.property 不可配置且不可配置且[[Get]]为undefined,处理程序返回值也必须是undefined
+         *  
+         */
+    </script>
+    <script>
+        /**
+         *  2 set()
+         *  捕获器会在设置属性值的操作中被调用
+         *  对应的反射API方法为Reflect.set();
+         */
+        const targetW = {};
+        const proxyW = new Proxy(
+            targetW, {
+                set(target, property, receiver) {
+                    console.log('set()');
+                    return Reflect.set(...arguments);
+                }
+            });
+        proxyW.foo = 'bar' //set()
+            /**
+             * 1 true表示成功,返回false表示失败,严格模式会抛出TypeError
+             * 2 拦截器的操作 
+             * proxy.property = value
+             * proxy[property] = value
+             * Object.create(proxy)[property] = value
+             * 3 捕获器处理程序参数
+             *   target:   目标对象
+             *   property  引用的目标对象上的字符串健属性
+             *   value     要赋给属性的值
+             *   receiver  接受最初赋值的对象
+             * 4  捕获器不变式
+             *   如果target.property不可写不可配置,则不能修改目标属性的值
+             *   如果target.property不可配置 且[[Set]]特性为undefined,则不能修改目标属性的值
+             *   在严格模式下 处理程序中返回false 会抛出TypeError
+             * 
+             */
+    </script>
+    <script>
+        /**
+         * 3 has()
+         * 捕获器会在in操作符中被调用
+         * 对应的反射API方法为Reflect.has()
+         * 
+         */
+    </script>
+    <script>
+        /**
+         * 4 defineProperty()
+         * defineProperty捕获器会在Object.defineProperty()中被调用
+         * 对应的反射API为Reflect.defineProperty()
+         * 
+         */
+        const targetR = {};
+        const proxyR = new Proxy(
+            targetR, {
+                defineProperty(target, property, receiver) {
+                    console.log('Object', target, property)
+                    return Reflect.defineProperty(...arguments);
+                }
+            });
+        Object.defineProperty(proxyR, 'foo', {
+            value: 'bar'
+        });
+        // Object : {value: "bar"}__proto__: Object foo
+    </script>
+    <script>
+        /**
+         * 拦截操作
+         * defineProperty()不许返回布尔值  表示属性是否成功定义,返回非布尔值会转型为布尔值
+         * Object.defineProperty(proxy,property,descriptor)
+         * Reflect.defineProperty(proxy,property,descriptor)
+         * 
+         */
+        /**
+         * 捕获器处理程序参数
+         * target: 目标对象
+         * property: 引用对上的字符串键属性
+         * descriptor:包含可选的 enumerable(for-in)、configurable(delete)、writeable(可以编辑)、value(默认)、get(读)、set(写)
+         */
+        /**
+         * 捕获器不变式
+         * 如果目标对象不可扩展,则无法定义属性
+         * 如果目标对象又一个配置的属性,则不能添加同名的不可配置属性
+         * 如果目标对象又一个不可配置的属性,则不能添加同名的可配置属性
+         */
+    </script>
+    <script>
+        /**
+         * getOwnPropertyDescriptor()
+         * 捕获器会在object.getOwnPropertyDescriptor()
+         * 对应反射API方法为Reflect.getOwnPropertyDescriptor()
+         */
+        const myTargetT = {
+            foo: false
+        };
+        const proxyT = new Proxy(myTargetT, {
+            getOwnPropertyDescriptor(target, property) {
+                console.log('getOwnPropertyDescriptor', target, property);
+                return Reflect.getOwnPropertyDescriptor(...arguments)
+            }
+        });
+        let a = Object.getOwnPropertyDescriptor(proxyT, 'foo1');
+        console.log(a) //undefined
+            // configurable: true
+            // enumerable: true
+            // value: false
+            // writable: true
+            // 
+            /**
+             *  
+             */
+            /**
+             * 1 getOwnPropertyDescriptor()对象 或者在属性不存在返回undefined
+             * Object.getOwnPropertyDescriptor()
+             * 2 拦截操作
+             * Object.getOwnPropertyDescriptor(proxy,property)
+             * Reflect.getOwnPropertyDescriptor(proxy,property)
+             * 3 捕获器处理程序参数
+             * target 目标对象
+             * property 引用的目标对象上的字符串的字符串键属性 
+             * 4 捕获器不变式
+             * target.property 不存在可配置,则处理程序必须返回一个表示该属性存在的对象
+             * target.property 存在target不可扩展,返回一个该属性存在的对象
+             * 不存在target 不可扩展,则处理程序必须返回undefine表示该属性不存在
+             * target.property不存在,则处理程序不能返回表示该属性可配置的对象 
+             */
+    </script>
+    <script>
+        /**
+         * deleteProperty()
+         * 捕获器会在delete操作符中被调用
+         * 对应的反射API方法为Reflect.deleteProperty()
+         * 
+         */
+        const myTargetY = {
+            noDelete: true,
+            foo: true
+        };
+        Object.defineProperty(myTargetY, 'noDelete', {
+            configurable: false
+        })
+        const proxyY = new Proxy(myTargetY, {
+            deleteProperty(target, property) {
+                console.log('deleteProperty');
+                return Reflect.deleteProperty(...arguments)
+            }
+        })
+        let a1 = delete proxyY.foo
+        let a11 = delete proxyY.noDelete
+        console.log(a1);
+        true
+        console.log(a11); //false
+        console.log('proxyY', proxyY)
+        console.log('proxyY', myTargetY)
+            // deleteProperty
+            /**
+             * 1 返回值
+             * 表示布尔值表示是否删除成功
+             * 2. 拦截器的操作
+             * delete proxy.property
+             * delete proxy[property]
+             * Reflect.deleteProperty(proxy,property)
+             * 3 捕获器处理程序参数
+             * target : 目标对象
+             * property 引用的目标对象的字符串键属性
+             * 4 捕获器不变式
+             * 如果自有target.property存在不可配置,测处理不能删除这个属性
+             */
+    </script>
+    <script>
+        /**
+         * ownKeys()
+         * 
+         * 捕获器会在Object.keys()
+         * 对应反射API方法为Reflect.ownKeys()
+         * 
+         */
+        let sym1 = Symbol('des')
+        const myTargetU = {
+            [sym1]: 1,
+            for: 1
+        };
+        Reflect.defineProperty(myTargetU,
+            'for', {
+                enumerable: false,
+            })
+        for (var variable in myTargetU) {
+            console.log('variable', variable)
+        }
+        const proxyU = new Proxy(myTargetU, {
+            ownKeys(target) {
+                console.log('ownKeys')
+                return Reflect.ownKeys(...arguments)
+            }
+        });
+        // a = Object.keys(proxyU);
+        console.log('', myTargetU)
+        console.log(' Reflect.ownKeys', Reflect.ownKeys(myTargetU))
+        console.log('a', proxyU)
+    </script>
+    <script>
+        /**
+         * 1 返回值 
+         * ownKeys()必须返回包含字符串或符号的可枚举对象
+         * 2 拦截的操作
+         * Object.getOwnPropertyNames(proxy)
+         * Object.getOwnPropertySymbols(proxy)
+         * Object.keys(proxy)
+         * Reflect.ownKeys(proxy)
+         * 3 目标对象
+         *  target: 目标对象
+         * 4 捕获器不变式
+         * 返回的可枚举对象必须包含target的所有不可枚举的自由属性。
+         *  如果target不可枚举,则返回可枚举对象必须准确地包含自由属性哦
+         */
+    </script>
+    <script>
+        /**
+         *  getPrototypeOf();
+         * 1 getPrototypeOf()
+         * 必须返回对象或null
+         * 2 拦截的操作
+         * Object.getPrototypeOf(proxy)
+         * Reflect.getPrototypeOf(proxy)
+         * proxy.__proto__
+         * Object.prototype.isPrototypeOf(proxy)
+         * proxy instanceof Object()
+         * 3 捕获器处理程序参数
+         * 4 捕获器不变式
+         * 如果target不可扩展,object.getPrototypeOf(proxy)
+         * 
+         */
+        const myTargetI = {
+            [sym1]: 1,
+            for: 1
+        };
+        const proxyI = new Proxy(myTargetI, {
+            getPrototypeOf(target) {
+                console.log('getPrototypeOf')
+                return Reflect.getPrototypeOf(...arguments)
+            }
+        });
+        let aa = Object.getPrototypeOf(proxyI);
+        console.log('aa', aa) // 返回原型属性
+        console.log('aa', proxyI.__proto__) // 返回原型属性
+        console.log('aa', proxyI.__proto__) // 返回原型属性
+        console.log('aa', Object.prototype.isPrototypeOf(proxyI)) // 返回原型属性
+        console.log('aa', proxyI instanceof Object) // 返回原型属性
+
+        /**
+         * 1 返回值
+         * 2  拦截的操作
+         *   Object.getOwnPropertyOf(proxy)
+         *   Reflect.getOwnPropertyOf(proxy)
+         *   Proxy.__proto__
+         *   Object.prototype.isPrototypeOf(proxy)
+         *   proxy instanceof Object
+         * 3 捕获器处理程序参数
+         * target:目标对象
+         * 4 捕获器不变式
+         * 如果target不可扩展,则Object.getPrototypeOf(proxy)
+         * 唯一有效的返回值就是Object.getPrototypeOf(target)的返回值
+         */
+    </script>
+
+    <script>
+        /**
+         * setPrototypeOf()
+         * 捕获器会在 Object.setPrototype()中被调用。对应的反射API方法为Reflect.setPrototypeOf()
+         * 
+         */
+        const myTargetO = {
+            [sym1]: 1,
+            for: 1
+        };
+        const proxyO = new Proxy(myTargetO, {
+            setPrototypeOf(target) {
+                console.log('setPrototypeOf')
+                return Reflect.setPrototypeOf(...arguments)
+            }
+        });
+        const O1 = Object.setPrototypeOf(proxyO, Object)
+        console.log(O1); //
+        /**
+         *  1 返回值
+         *  setPrototypeOf必须返回布尔值,表示原型赋值是否成功
+         *  2 拦截的操作
+         *  Object.setPrototypeOf(proxy)
+         *  Reflect.setPrototypeOf(proxy)
+         * 3 捕获器处理程序参数
+         * target: 目标对象
+         * 4 捕获器不变式
+         * 如果target 不可扩展,则唯一有效的prototype参数是Object.getPrototypeOf(target)的返回值
+         * 
+         */
+    </script>
+    <script>
+        /**
+         * isExtensible() 是否可扩展的
+         * 捕获器会在Object.isExtensible()中被调用
+         * 对应的反射API方法为Reflect.isExtensible()
+         * 
+         */
+        const myTargetP = {
+            [sym1]: 1,
+            for: 1
+        };
+        const proxyP = new Proxy(myTargetP, {
+            isExtensible(target) {
+                console.log('isExtensible')
+                return Reflect.isExtensible(...arguments)
+            }
+        });
+        const p1 = Object.isExtensible(proxyP);
+        console.log('p1', p1) // true
+            // isExtensible
+            /**
+             *  1 返回布尔值,表示target是否可扩展
+             *  2 拦截的操作
+             *  Object.isExtensible(proxy)
+             *  Reflect.isExtensible(proxy)
+             *  3 捕获器处理参数
+             *  target:目标对象
+             *  4 捕获器不变式
+             *  如果可扩展,返回true
+             *  如果不可扩展,返回false
+             */
+    </script>
+    <script>
+        /**
+         * preventExtensions()
+         * 捕获器会在Object.preventExtensions()中被调用
+         * 对应的反射API方法为Reflect.preventExtensions()
+         */
+        const myTargetZ = {
+            [sym1]: 1,
+            for: 1
+        };
+        const proxyZ = new Proxy(myTargetZ, {
+            preventExtensions(target) {
+                console.log('preventExtensions')
+                return Reflect.preventExtensions(...arguments)
+            }
+        });
+        const Z1 = Object.preventExtensions(proxyZ);
+        console.log('Z1', Z1) // true
+            /**
+             * 1  返回值  是否不可扩展 返回值布尔值会被转型为布尔值
+             * 2  拦截器 Object.preventExtensions(proxy)
+             *          Reflect.preventExtensions(proxy)
+             * 3  捕获器处理程序参数
+             *    target 目标对象
+             * 4  捕获器不变式
+             *    如果Object.isExtensible(proxy)是false,则处理程序必须返回true
+             */
+    </script>
+    <script>
+        /**
+         * apply()
+         * 捕获器会在调用函数时中被调用,对应的反射API方法为Reflect.apply()
+         * 
+         * 
+         */
+        const myTargetX = () => {
+            // [sym1]: 1,
+            // for: 1
+        };
+        const proxyX = new Proxy(myTargetX, {
+            apply(target, thisArg, ...argumentsList) {
+                console.log('apply()', thisArg)
+                console.log('apply()', argumentsList)
+                return Reflect.apply(...arguments)
+            }
+        });
+        proxyX(123, 123) //apply()
+        let myFunc = () => {}
+        Function.prototype.apply(myFunc, this, [1, 2, 3, 4]);
+        /**
+         * 1 返回值
+         *   返回值无限制
+         * 2 拦截器的操作
+         * proxy(...argumentsList)
+         * Function.prototype.apply(thisArg...argumentsList)
+         * Function.prototype.call(thisArg...argumentsList)
+         * Reflect.apply(target,thisArgument,...argumentsList)
+         * 3 捕获器处理程序参数
+         * target:目标对象
+         * thisArg:调用函数时候
+         * argumentsList:参数列表
+         */
+    </script>
+    <script>
+        /**
+         * construct()
+         * 捕获器会在new操作符中被调用
+         * 对应的反射API方法为REflect.construct()
+         */
+        const myTargetV = function() {}
+            // [sym1]: 1,
+            // for: 1
+        const proxyV = new Proxy(myTargetV, {
+            construct(target, argumentsList, newTarget) {
+                console.log('construct()')
+                return Reflect.construct(...arguments)
+            }
+        });
+        new proxyV //construct()
+        /**
+         * 1 返回值
+         * construct()必须返回一个对象
+         * 2 拦截器的操作
+         *  new proxy(...argumentsList)
+         *  Reflect.constructor(target,argumentsList,newTarget)
+         * 3 捕获器处理程序参数
+         *   target: 目标构造函数
+         *   argumentsList: 传给目标函数的参数列表
+         *   newTarget 最初被调用的构造函数
+         * 4 捕获器不变式
+         * target 必须可以用做构造函数
+         */
+    </script>
+
+</body>
+
+</html>

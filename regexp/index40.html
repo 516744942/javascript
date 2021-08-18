@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>原子组在替换中的使用技巧</title>
+</head>
+
+<body>
+    <main>
+        <h1>
+            <a id="l1" style="color: red;" href="http://www.wanghefeng.com">开源系统</a>
+        </h1>
+        <h2>asdasd.com</h2>
+        <h3>wangefeng.com</h3>
+    </main>
+</body>
+<script>
+    const main = document.querySelector('main');
+    let reg = /(<a.*href=["'])(http)(:\/\/)(www\.)?(wanghefeng)/i;
+    console.log('main', main)
+    main.innerHTML = main.innerHTML.replace(reg, (v, ...args) => {
+        console.log(v)
+        args[1] += 's'
+        args[3] = args[3] ? args[3] : 'www.'
+        return args.splice(0, 5).join('')
+    });
+</script>
+
+</html>

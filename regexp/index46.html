@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>使用规格规范价格</title>
+</head>
+
+<body>
+    <main>
+        嘻嘻哈哈的王和锋 天天嘻嘻哈哈
+    </main>
+</body>
+<script>
+    let hf = `
+    js,200000000元,250次
+     php,300.00元,150次
+     java,300.531元,150次
+    node.js,18元,,250次
+    `
+    let reg = /(\d+)(.\d{1,})?(?=元)/gi
+    let reg2 = /(\d{3})/g
+    let reg3 = /^(,)/i
+
+    function deal(num, onlyNumber) {
+        let numbers = [];
+        let dealNumber = num.replace(reg, (v, ...args) => {
+            let tem = [...args[0]].reverse().join('');
+            console.log(tem)
+            result = tem.replace(reg2, (v, ...arg2) => {
+                return v + ','
+            });
+            console.log(result)
+            let temString = [...result].reverse().join('')
+            args[0] = temString.replace(reg3, '')
+                // args[0] = temString.search(',') == 0 ? temString.slice(1) : temString
+            args[1] = args[1] ? (+args[1]).toFixed(2) : '.00'
+                // numbers.push(args.splice(0, 2).join(''))
+            let finallyValue = args.splice(0, 2).join('')
+            numbers.push(finallyValue)
+            return finallyValue
+        });
+        return onlyNumber ? numbers : dealNumber
+    }
+    console.log(deal(hf))
+    console.log(deal(hf, true))
+        /**
+         * js,200,000,000.00元,250次
+         *   php,3000.00元,150次
+         *  java,3000.53元,150次
+         * node.js,180.00元,,250次
+         */
+</script>
+
+</html>

@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>正则操作DOM 元素</title>
+</head>
+
+<body>
+    <div class="content">
+        wanghufeng.com
+    </div>
+    <input type="text" name="user">
+    <span></span>
+    <h1>wanghefeng xixihaha
+
+    </h1>
+    <h2>xiangfengleyiyang</h2>
+</body>
+<script>
+    let body = document.body;
+    /**
+     * \1就是去第一个括号
+     */
+    let reg = /<(h[1-6])>[\s\S]+<\/\1>/gi
+    console.log('body.innerHTML', body.innerHTML)
+    body.innerHTML = body.innerHTML.replace(reg, '');
+</script>
+
+</html>

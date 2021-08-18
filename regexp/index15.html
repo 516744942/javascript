@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>lastIndex属性作用</title>
+</head>
+
+<body>
+    <div class="content">
+        wanghufeng.com
+    </div>
+    <input type="text" name="user">
+    <span></span>
+</body>
+<script>
+    let hf = '王和锋wanghefeng2021.,水电费!';
+    let reg = /\w/g
+    console.log(reg.lastIndex)
+    let result1 = hf.match(reg.exec(hf));
+    console.log(reg.lastIndex)
+    let result2 = hf.match(reg.exec(hf));
+    console.log(result1)
+    console.log(result2)
+    while (res = reg.exec(hf)) {
+        console.log(res)
+    }
+</script>
+
+</html>

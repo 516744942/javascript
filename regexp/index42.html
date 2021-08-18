@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>使用原子组别名优化正则</title>
+</head>
+
+<body>
+    <main>
+        <h1>
+            <a id="l1" style="color: red;" href="http://www.wanghefeng.com" disabled>开源系统</a>
+        </h1>
+        <h2>
+            <a id="l1" style="color: red;" href="http://www.xixihha.com">嘻嘻哈哈</a></h2>
+        <h3>
+            <a id="l1" style="color: red;" href="http://wangefeng.com">王和锋</a>
+        </h3>
+    </main>
+</body>
+<script>
+    let hf = `
+        <h1>wanghefeng</h1>
+        <h2>asdasd.com</h2>
+        <h3>wangefeng.com</h3>
+    `;
+    let dom = document.querySelector('main');
+    let reg = /<a.*?href=(['"'])(?<link>.*?)\1>(?<title>.*?)<\/a>/g
+    const links = [];
+    for (const iterator of dom.innerHTML.matchAll(reg)) {
+        console.log(iterator);
+        links.push(iterator['groups'])
+    }
+    console.log(links)
+</script>
+
+</html>

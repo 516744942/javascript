@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>有效率的y模式</title>
+</head>
+
+<body>
+    <div class="content">
+        wanghufeng.com
+    </div>
+    <input type="text" name="user">
+    <span></span>
+</body>
+<script>
+    // let hf = "nghefeng";
+    // let reg = /n/y;
+    // console.log(reg.exec(hf));
+    // console.log(reg.lastIndex);
+    // console.log(reg.exec(hf));
+    // console.log(reg.lastIndex);
+    let example = `学习QQ群:1111111,9999999,88888888
+    嘻嘻哈哈一起学习,wanghefeng.com 88888888`;
+    /**
+     * 不要找到最后
+     * 效率会更高一点
+     */
+    let reg = /(\d+),?/y;
+    reg.lastIndex = 6
+    let qq = []
+    while (res = reg.exec(example)) {
+        console.log(res)
+        qq = [...qq, ...res.slice(1)]
+    }
+    console.log(qq)
+</script>
+
+</html>

@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>i与g模式修正符</title>
+</head>
+
+<body>
+    <div class="content">
+        wanghufeng.com
+    </div>
+    <input type="text" name="user">
+    <span></span>
+</body>
+<script>
+    let hf = "wanghUfeNg"
+        /**
+         * 顺序没有关系
+         */
+    console.log(hf.match(/n/gi));
+    let result = hf.replace(/n/ig, "@")
+    console.log(result)
+</script>
+
+</html>

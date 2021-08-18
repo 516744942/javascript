@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>标签替换的禁止贪婪使用</title>
+</head>
+
+<body>
+    <div class="content">
+        wanghufeng.com
+    </div>
+    <input type="text" name="password" value="517844942@qq.com.cn">
+    <main>
+        <span>wanghefeng</span>
+        <span>asdasd.com</span>
+        <span>wangefeng.com</span>
+    </main>
+</body>
+<script>
+    const main = document.querySelector('main')
+    const reg = /<span>([\s\S]+?)<\/span>/ig
+    main.innerHTML = main.innerHTML.replace(reg, (v, p1) => {
+        console.log(v)
+        console.log(p1)
+        return `<h4>我的天啊${p1}</h4>`
+    })
+</script>
+
+</html>

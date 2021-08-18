@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>regexp</title>
+</head>
+
+<body>
+    <div class="content">
+        wanghufeng.com
+    </div>
+</body>
+<script>
+    let con = prompt('请输入检测的内容,支持正则');
+    let reg = new RegExp(con, 'g');
+    let dom1 = document.querySelector('div');
+    console.log('reg', reg)
+    console.log('dom1', dom1)
+    dom1.innerHTML = dom1.innerHTML.replace(reg, (search) => {
+        console.log('search', search)
+        return `<span style="color:red">${search}</span>`
+    })
+</script>
+
+</html>

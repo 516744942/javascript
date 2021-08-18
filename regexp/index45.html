@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>?=断言匹配</title>
+</head>
+
+<body>
+    <main>
+        嘻嘻哈哈的王和锋 天天嘻嘻哈哈
+    </main>
+</body>
+<script>
+    let main = document.querySelector('main');
+    let reg = /嘻嘻(?=哈哈)/i //后面是谁的 但是后面不记录
+    main.innerHTML = main.innerHTML.replace(
+        reg,
+        `<a href="www.wanghefeng.com">$&</a>`)
+</script>
+
+</html>

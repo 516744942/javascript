@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>网站用户名的验证</title>
+</head>
+
+<body>
+    <div class="content">
+        wanghufeng.com
+    </div>
+    <input type="text" name="user" value="517844942@qq.com.cn">
+    <span></span>
+
+</body>
+<script>
+    let dom = document.querySelector('[name=user]')
+    dom.addEventListener('keyup', function(e) {
+        const {
+            value
+        } = e.target
+        let reg = /^[a-z][\w-]{2,7}$/i
+    });
+    // 
+    let arr = [12345678, 8123123.234];
+    let result = []
+    for (const iterator of arr) {
+        if (Number.isInteger(iterator)) {
+            result.push(dealNum(iterator) + '.00')
+        } else {
+            let tem = iterator.toString().split(".")
+            let res = dealNum(tem[0]) + '.' +
+                (tem[1] / 100).toFixed(2) * 100
+            result.push(res)
+        }
+    }
+
+    function dealNum(num) {
+        let reg = /\d{3}/g;
+        num = [...num.toString()].reverse().join('').replace(reg, (search) => {
+            return search + ','
+        })
+        if (num.lastIndexOf(',') == num.length - 1) num = num.substr(0, num.lastIndexOf(','))
+        return [...num].reverse().join('')
+    }
+</script>
+
+</html>

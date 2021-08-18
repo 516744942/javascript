@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+
+<body>
+    <script>
+        /**
+         * 闭包
+         * 指那些引用了另一个函数作用域中变量的函数
+         */
+        function createCompareFunction(propertyName) {
+            return function(object1, object2) {
+                let value1 = object1[propertyName]
+                let value2 = object2[propertyName]
+                if (value1 > value2) {
+                    return 1
+                } else if (value1 < value2) {
+                    return -1
+                } else {
+                    return 0
+                }
+            }
+        }
+        /**
+         * propertyName 在这个内部函数返回 并在其他地方引用
+         * 他引用引用着那个变量
+         * 这是因为内部函数的作用域链包含 createCompareFunction()的函数作用域
+         * 函数的调用
+         * 1. 创建一个执行上下文 
+         * 2. 创建一个作用域链
+         * 3. 预装载全局变量对象
+         * 4. 保存在颞部的[[scope]]
+         * 3. argument和其他命名参数来初始化这个函数的活动对象
+         * 4. 外部函数的活动对象是内部函数作用链上的第二个对象
+         * 5. 这个作用域链一直向外串起了所有包含函数的活动对象,知道全局上下文
+         * 6. 在函数执行时 要从作用链中查找变量,
+         * 7. 执行完成之后 局部活动对象会被销毁,内存中就只剩下全局作用域
+         * 8. 闭包不一样
+         */
+    </script>
+    <script>
+        /**
+         * 副作用: createCompareFunction的内部活动对象并不能在他执行完毕后销毁
+         * 因为匿名函数的作用链仍然有对它的引用
+         * 知道匿名函数被销毁才会被销毁
+         * compareName =null
+         */
+    </script>
+    <script>
+        /**
+         * this 对象
+         * 在闭包中使用this 会让代码变复杂
+         * 如果内部函数没有使用箭头函数定义
+         * this 对象会在运行时绑定到执行的上下文,
+         * 则this对象会在运行时绑定到执行函数的上下文,如果在全局函数中调用
+         * 则this在非严格模式下等于window,在严格模式下等于undefined
+         * 某个对象方法调用,这就是意味着this会指向window
+         * 
+         */
+        /**
+         * 内存泄漏
+         * 
+         */
+        function assignHandler(params) {
+            let element = document.getElementById('someElement');
+            element.onclick = () => console.log(element.id)
+            element = null //防止内存溢出
+        } 
+        /**
+         * 立即调用的函数表达式  IIFE
+         * es6之后 IIFE就没有那么必要了 let块级作用域
+         * 
+         */
+        (function(params) {
+            // 块级作用域
+        })();
+    </script>
+    <script>
+        /**
+         * 私有变量
+         * 对象属性都共有的,私有变量的概念
+         * 任何定义在函数或块中的变量 都可以认为是私有的
+         * 因为在这个函数或块的外部无法访问其中的变量
+         * 私有变量包括函数参数、局部变量、以及函数内部定义的其他函数
+         */
+    </script>
+</body>
+
+</html>

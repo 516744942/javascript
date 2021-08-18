@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>排除匹配</title>
+</head>
+
+<body>
+    <div class="content">
+        wanghufeng.com
+    </div>
+    <input type="text" name="user">
+    <span></span>
+</body>
+<script>
+    // let hf = "wanghefeng";
+    // console.log(hf.match(/[^ue]/gi))
+
+    let hf = `张三:010-999999999 李四:020-88888888`;
+    console.log(hf.match(/[^\d:\s-]+/g))
+</script>
+
+</html>

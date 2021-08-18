@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>JSON</title>
+</head>
+
+<body>
+    <script>
+        let obj = {
+            a: ' 123 4fdf',
+            b: undefined,
+            c: Symbol('a'),
+            d: 123
+        };
+        console.log(JSON.stringify(obj))
+        console.log(JSON.stringify(obj, ['a']))
+        let book = {
+            title: "professional JavaScript",
+            authors: [
+                "Nicholas",
+                "Matt Fri b ie"
+            ],
+            edition: 4,
+            year: 2017,
+            toJSON: function() {
+                return {
+                    title: this.title,
+                    authors: this.authors,
+                    myDate: 1
+                }
+            }
+        }
+        let result11111 = JSON.stringify(book);
+        let backValue = JSON.parse(result11111, (key, value) => {
+            // 还原行数
+            return key === 'myDate' ? new Date(value) : value
+        })
+        console.log('backValue', backValue)
+
+        console.log(JSON.stringify(book, null, 4))
+        let result = JSON.stringify(book, (key, value) => {
+            console.log(key)
+            switch (key) {
+                case "authors":
+                    return value.join(',')
+                case "year":
+                    return 5000;
+                case "edition":
+                    return undefined;
+                default:
+                    return value
+            }
+        }, 4);
+        console.log(result)
+    </script>
+</body>
+
+</html>

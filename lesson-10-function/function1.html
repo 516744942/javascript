@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>function</title>
+</head>
+
+<body>
+    <script>
+        /**
+         * 函数内部
+         * 函数内部存在两个特俗的对象
+         * arguments和this
+         * es6 增加了 new.target
+         * callee 一个指向arguments对象所在函数的指针
+         */
+        internal(1)
+
+        function internal(params) {
+            console.log(arguments)
+            let bar = () => {
+                console.log(arguments)
+                console.log(arguments[0])
+            }
+            bar()
+
+            function test(params) {
+                console.log(arguments)
+            }
+            test()
+            console.log(arguments.callee)
+            console.log('params', params);
+        }
+        let a = ['笑', '打']
+        let b = ['一', '而']
+        let c = ['红', '黄']
+            //  笑 一 红
+            //  笑 一 黄
+            //  笑 而 红
+            //  笑 而 黄
+            //  打 一 红
+            //  打 一 黄
+            //  打 而 红
+            //  打 而 黄
+        function factorial(num) {
+            if (num <= 1) {
+                return 1
+            } else {
+                return num * arguments.callee(num - 1)
+            }
+        }
+        /**
+         * 严格模式会有问题 可以用匿名函数代替
+         */
+        let factorialReplace = (function f(num) {
+            if (num <= 1) {
+                return 1
+            } else {
+                return num * f(num - 1)
+            }
+        })
+        console.log(factorial(10))
+        console.log('factorialReplace', factorialReplace(10))
+
+        function factorial2(arr) {
+            let finallyArr = arr.reduce((total, current, index) => {
+                if (index == 0) {
+                    return current.map(x => {
+                        return {
+                            [`s${index}`]: x
+                        }
+                    })
+                } else {
+                    let tem = []
+                    total.forEach(x => {
+                        current.forEach(x1 => {
+                            tem.push({
+                                [`s${index}`]: x1,
+                                ...x
+                            })
+                        })
+                    })
+                    return tem
+                }
+
+            }, [])
+            return finallyArr
+        }
+
+        console.log(factorial2([a, b, c]))
+    </script>
+    <script>
+        /**
+         * this 
+         */
+        /**
+         * 哪个对象调用时才能确定
+         * 因为箭头函数this会保留定义改函数时候的上下文
+         * 
+         */
+        /**
+         * caller 
+         * 给函数对象添加一个caller属性
+         * 当前当用的函数的函数
+         * 
+         */
+        function outer() {
+            inner()
+        }
+
+        function inner() {
+            console.log(inner.caller)
+        }
+        inner()
+        outer()
+    </script>
+    <script>
+        /**
+         * new target
+         * 可以作为构造函数实例化一个新对象
+         * 也可以作为普通函数使用
+         * 引用将new.target 将引用被调用的构造函数
+         */
+        function King() {
+            if (!new.target) {
+                throw 'King must'
+            }
+            console.log('new.target', new.target)
+            console.log('King')
+        }
+        new King();
+        King()
+    </script>
+    <script>
+        /**
+         * 函数的属性与方法
+         * 函数式对象
+         * 每个函数有两个属性 length和prototype
+         */
+        function sayName(name, asd) {
+            console.log('name', name)
+        }
+        console.dir(sayName);
+        /**
+         * 两个命名参数
+         * property 是保存引用类型所有实例方法的方法的地方
+         * property 不可枚举 所以不能使用for-in
+         */
+        console.log(sayName.prototype) // 构造函数的原型
+        console.dir(sayName) // 实例的原型
+        console.dir(Object.getPrototypeOf(sayName))
+            /**
+             * 都会以指定的this值来调用函数
+             * 即会设置调用函数时 函数体内this对象的值
+             * apply(this的值和一个参数对象,可以是数组也可以是argument对象)
+             * 
+             */
+    </script>
+    <script>
+        /**
+         * 
+         */
+        function callSum1(num1, num2) {
+            console.log(this)
+
+            function functionName2(num1, num2) {
+                console.log(this)
+                return num1 + num2
+            }
+            functionName2(num1, num2)
+            return function() {
+                console.log('return', this)
+            }()
+        }
+        let obj = {
+
+        }
+        callSum1.apply(obj, [1, 2])
+        callSum1.apply(null, [1, 2])
+        callSum1.call(obj, 1, 2)
+        callSum1();
+    </script>
+    <script>
+        /**
+         *  尾部调用优化
+         */
+        function outerFunction() {
+            return innerFunction()
+        }
+        /**
+         * 优化前
+         * 推outerFunction进栈
+         * 执行outerFunction 到return语句 ,计算必须返回innerFunction
+         * 执行到innerFunction 函数体 , 第二个栈帧被推送到栈上
+         * 执行innerFunction, 计算其返回值
+         * 传回给outerFunction, outerFunction再返回值
+         * 将栈帧弹出站外
+         */
+        /**
+         * es6 优化后
+         * 推outerFunction进栈
+         * 执行outerFunction 到return语句 计算必须返回innerFunction
+         * 浏览器发现弹出把第一栈弹出也没有关系，因为outerFunction的返回值也是innerFunction的返回值
+         * 弹出outerFunction
+         * 将innerFunction的推送到 栈上
+         * 执行innerFunction,计算其返回值
+         * innerFunction弹出站外
+         * 
+         */
+        /**
+         * 第二种无论调用多少次 ,都只有一个栈
+         */
+    </script>
+
+
+</body>
+
+</html>

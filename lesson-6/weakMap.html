@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>WeakMap</title>
+</head>
+
+<body>
+
+    <script>
+        /**
+         * WeakMap(弱映射)是一种新的集合类型
+         * 为这门语言带来瞭增强的键值对粗储存机制
+         * WeakMap是Map的兄弟类型
+         * API也是Map的子集
+         * weakMap中的weak(弱)
+         * 描述的是javaScript垃圾回收程序对待"弱映射"中键的方式
+         * 
+         */
+        /**
+         * 1 基本API
+         * 可以使用实例化一个空的weakMao
+         * const wm = new WeakMap();
+         * 弱映射的键只能是Object或者继承自Object怼类型
+         * 尝试使用非对象设置键会跑出 TypeError 值没有类型的限制
+         * 如果想在初始化时填充弱映射,则构造函数可以接受一个可迭代对象,
+         * 其中需要包含 键/值对数组
+         * 可迭代对象中的每个键/值都会按照迭代顺序插入新事例中
+         */
+        const key1 = {
+                id: 1
+            },
+            key2 = {
+                id: 2
+            },
+            key3 = {
+                id: 3
+            };
+        const wm1 = new WeakMap(
+            [
+                [key1, "value1"],
+                [key2, "value2"],
+                [key3, "value3"]
+            ]
+        );
+        console.log(wm1) //WeakMap {{…} => "value2", {…} => "value3", {…} => "value1"
+        console.log(wm1.get(key1)) // value1
+        console.log(wm1.get(key2)) //value2
+        console.log(wm1.get(key3)) //value3
+    </script>
+
+</body>
+
+</html>

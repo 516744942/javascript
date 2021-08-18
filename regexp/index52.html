@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>使用断言排除法统一数据</title>
+</head>
+
+<body>
+    <main>
+        <a href="https://www.wanghefeng.com/1.jpg">1.jpg</a>
+        <a href="https://oss.wanghefeng.com/2.jpg">3.jpg</a>
+        <a href="https://cdn.wanghefeng.com/3.jpg">4.jpg</a>
+        <a href="https://xixihaha.com/3.jpg">嘻嘻哈哈</a>
+    </main>
+</body>
+<script>
+    /**
+     * 开头都变成oss.
+     */
+    const main = document.querySelector('main');
+    // let reg = /https:\/\/([a-z]+)?(?<!oss)\..+?(?=\/)/gi
+    let reg = /https?:\/\/([a-z]+)?(?<!oss)\..+?(?=\/)/gi
+    main.innerHTML = main.innerHTML.replace(reg, (v) => {
+        return "https//oss.wanghefeng.com"
+    });
+</script>
+
+</html>

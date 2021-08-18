@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>使用断言模糊电话号</title>
+</head>
+
+<body>
+    <main>
+        嘻嘻哈哈的王和锋 天天嘻嘻哈哈 前面的断言
+        <a href="https//baidu.com">百度</a>
+        <a href="https//yahoo.com">雅虎</a>
+    </main>
+</body>
+<script>
+    let users = `
+     王和锋电话:11111111111,
+     嘻嘻哈哈电话:22222222222,
+    `;
+    let reg = /(?<=\d{4})\d{4}(?=\d{3})/ig;
+    let result = users.replace(reg, v => {
+        return '*'.repeat(v.length)
+    })
+    console.log(result)
+</script>
+
+</html>

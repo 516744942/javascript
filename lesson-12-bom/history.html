@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+
+<body>
+
+    <script>
+        /**
+         * history对象
+         * history 对象表示当前窗口首次使用依赖用的导航历史记录
+         * history 是window属性,所以每个window都有自己的history对象
+         * 不会暴露给访问过的URL
+         * 
+         */
+        /**
+         * 导航
+         * go(Number)方法可以在用户历史记录中沿任何方向导航
+         * go(-1) 后退一页
+         * go(-2)  后退二页
+         * go(2) 前进二页
+         * go(string)//go(wrox.com)导航到最近的wrox.com页面,没有则什么都不做
+         */
+        /**
+         * back()
+         * forward()
+         */
+        /**
+         * 实例属性
+         * length
+         */
+        /**
+         * location.hash(spa),会在历史记录中增加一条记录,不会因导航二触发页面刷新
+         * 
+         */
+        /**
+         * 历史状态管理
+         * hashchange事件(介绍事件时会讨论)
+         * HTML5也会history对象增加了方便的状态管理特性
+         * 
+         */
+        /**
+         * hashchange 会在页面URL的散列变化时被触发 改变URL而不会加载新页面
+         */
+        /**
+         * pushState(state对象,新状态的,可选的想对url)方法
+         * 
+         *         let stateObject = {
+         *           foo: "bar"
+         *       };
+         * console.log(window.history);
+         * window.history.pushState(stateObject, "my Title", "baz.html")
+         * 第一个参数包含正确初始化页面状态所必须的信息,为防止滥用
+         * 有大小限制通常(500kb-1M)
+         * 
+         * 
+         */
+        /**
+         * 即时location.href 返回的是地址中的内容,浏览器页不会向服务器发送请求
+         */
+        /**
+         * 会触发window对象上的popstate事件,
+         * popstate事件对象有一个state属性.其中包含通过 pushState()第一个参数传入state对象
+         * 增加历史记录之后 dying页面加载状态是null
+         */
+        window.addEventListener('popstate', event => {
+            let state = event.state; //第一个页面加载时状态是null
+            console.log(state)
+            if (state) {
+                processState(state)
+            }
+        });
+        /**
+         * history.replaceState(stateObject, "my Title", "baz.html")
+         */
+        /**
+         * 框架注意,每个假URL背后都对应着服务器上一个真实的物理URL,否则单机刷新按钮会导致404错误,
+         *  所有单页面应用程序(SPA, single page Application),框架都必须通过服务器或客户端的某些配置解决这个问题
+         * 默认浏览器会认为你是在请求服务端的路由，服务端那边没有对应的处理，所以自然就会出错了
+         * 前端的url必须和实际向后端发起请求的url 一致，如http://www.baidu.com/a/ 。如果后端缺少对/a 的路由处理，将返回404错误。
+         */
+    </script>
+</body>
+
+</html>
