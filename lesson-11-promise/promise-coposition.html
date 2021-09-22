@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>期约连锁与期约合成</title>
+</head>
+
+<body>
+
+
+    <script>
+        /**
+         * 多个期约可以构成强大的代码逻辑,
+         * 这种组合可以通过两种方式实现
+         * 1. 期约连锁
+         * 2. 期约合成
+         */
+        /**
+         * 期约连锁
+         * 把期约逐个地串联起来是一种非常有用的变成模式
+         * 之所以每个实例方法(then() catch()和finally)都会返回一个新的期约对象
+         * 而这个新期约又有自己的实例方法
+         * 这样就可以构成所谓的 期约连锁
+         */
+        let p1 = new Promise((resolve, reject) => {
+            console.log('first')
+            resolve()
+        });
+        console.log('123')
+        p1.then(() => console.log('second'))
+            .then(() => {
+                console.log('third')
+            }).then(() => {
+                console.log('four')
+            });
+        console.log('456')
+        p1.then(() => console.log('five'));
+        /**
+         * 这个实现最终执行了一连串同步任务
+         * 不是很有用逼近4个同步函数也可以做到
+         */
+        /**
+         * 要真正执行异步任务
+         */
+        var a = 1
+
+        function functionName() {
+            this.setTimeout(() => {
+                console.log(a)
+            }, 100);
+        }
+        functionName()
+        setTimeout(() => {
+            a = 2
+        }, 10);
+    </script>
+    <script>
+        /**
+         * 让每个执行器都返回一个期约实例
+         * 这样可以让每个后续期约等待之前的期约,也就是串行化异步任务
+         */
+        let p2 = new Promise((resolve, reject) => {
+            console.log('p1 executor')
+            setTimeout(resolve, 10);
+        });
+        p2.then(() => new Promise((resolve, reject) => {
+            console.log('p2 executor')
+            setTimeout(resolve, 10);
+        })).then(() => new Promise((resolve, reject) => {
+            console.log('p3 executor')
+            setTimeout(resolve, 10);
+        })).then(() => new Promise((resolve, reject) => {
+            console.log('p4 executor')
+            setTimeout(resolve, 10);
+        }));
+    </script>
+    <script>
+        /**
+         * 把生成期约的代码提取到一个工厂函数中,就可以写成这样
+         * 
+         */
+        function delayedResolve(str) {
+            return new Promise((resolve, reject) => {
+                console.log(str);
+                setTimeout(resolve, 10);
+            })
+        }
+        delayedResolve('p11 executor')
+            .then(() => delayedResolve('p12 executor'))
+            .then(() => delayedResolve('p13 executor'))
+            .then(() => delayedResolve('p14 executor'));
+    </script>
+    <script>
+        /**
+         * 期约图
+         * 因为一个期约可以有任意多个处理程序
+         * 所以期约连锁可以构建有向非循环的结构
+         * 二叉树
+         */
+        let A = new Promise((resolve, reject) => {
+            console.log('A')
+            resolve()
+        })
+        let B = A.then(() => {
+            console.log('B')
+        })
+        let C = A.then(() => {
+            console.log('C')
+        });
+        B.then(() => {
+            console.log('D')
+        })
+        B.then(() => {
+            console.log('E')
+        })
+        C.then(() => {
+            console.log('F')
+        })
+        C.then(() => {
+            console.log('G')
+        });
+    </script>
+    <script>
+        /**
+         * 多个期约组合成一个期约
+         * Promise.all()和Promise.race()
+         */
+        /**
+         *  Promise.all(); 会在一组期约解决之后再解决,这个静态方法接受一个可迭代
+         *  返回一个新期约
+         */
+        let pa = Promise.all([
+            Promise.resolve(),
+            Promise.resolve(),
+        ])
+        console.log('pa', pa)
+            /**
+             * 可迭代对象中的元素会通过Promise.resolve()转换为期约
+             * 
+             */
+        let pa2 = Promise.all([3, 4])
+        console.log('pa2', pa2)
+            /**
+             * 空的可迭代对象等价于Promise.resolve()
+             * 
+             */
+        let p3 = Promise.resolve([])
+            /**
+             * 有一个拒绝就拒绝
+             * 有一个待定就待定
+             * 最后才是兑现
+             */
+        let pa4 = Promise.all([
+                // new Promise(() => {}),
+                // Promise.reject(),
+                Promise.resolve(),
+            ])
+            /**
+             * 按照数组迭代
+             * 如果有期约拒绝，则第一个拒绝的期约会将自己的理由作为合成期约的拒绝理由
+             * 第二个期约的拒绝也会被静默处理,不会错误跑调
+             */
+        let pa5 = Promise.all([
+            Promise.reject(3),
+            new Promise((reason, reject) => setTimeout(reject, 1000))
+        ])
+        pa5.catch((reason) => {
+            console.log('reason', reason)
+        })
+        console.log('pa4', pa4);
+    </script>
+    <script>
+        /**
+         * Promise.race();
+         * 返回一个包装期约
+         * 是一组集合中最先解决或拒绝的契约镜像
+         * 这个方法接受一个可迭代对象,返回一个新期约
+         */
+        let pr = Promise.race([3, 4]);
+        pr.then(res => console.log(res))
+        console.log('pr', pr)
+        let pr1 = Promise.race([]);
+        /**
+         * 第一个落定的期约就是返回的新期约
+         */
+    </script>
+    <script>
+        /**
+         * 4 串行期约合唱
+         * 异步产生致并将其传给处理程序
+         * 这很像函数合成(compose) 即将多个函数合成一个新函数
+         */
+        function addTwo(x) {
+            return x + 2
+        }
+
+        function addThree(x) {
+            return x + 3
+        }
+
+        function addFive(x) {
+            return x + 5
+        }
+
+        function addTen(x) {
+            return addFive(addTwo(addThree(x)))
+        }
+        console.log(addTen(7));
+    </script>
+    <script>
+        /**
+         * 使用Array.prototype.reduce()
+         */
+        function addTen2(x) {
+            return [addTwo, addThree, addFive]
+                .reduce((promise, fn) => {
+                    console.log('promise', fn)
+                    return promise.then(fn)
+                }, Promise.resolve(x))
+        }
+        addTen2(9).then(res => console.log(res));
+
+        function compose(...fns) {
+            return (x) => fns.reduce((promise, fn) => promise.then(fn), Promise.resolve(x));
+        }
+        let addTen1 = compose(addTwo, addThree, addFive);
+        addTen1(8).then(console.log);
+    </script>
+</body>
+
+</html>

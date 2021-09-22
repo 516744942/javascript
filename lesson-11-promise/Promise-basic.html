@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>promise(期约)</title>
+</head>
+
+<body>
+
+    <script>
+        /**
+         * 期约基础 可以通过new操作符来实例化
+         * 创建新期约时需要传入执行器(executor)
+         * 下面的例子使用了一个空函数对象来应付一下解释器
+         * 不提供就会包语法错误
+         */
+    </script>
+    <script>
+        /**
+         * 期约状态机 
+         * 1 pending(待定) 
+         * 2 兑现(fuilled) 有时候也称为 解决 resolved
+         * 3 拒绝  reject
+         * 状态是不可逆的
+         */
+        /**
+         * 解决值、拒绝理由以及约用例
+         * 两大用途
+         * 1. 抽象的表示一个异步操作
+         * 2. 利用提供最有用的信息(200-299状态码,变为兑现)(其他拒绝,返回一个Error对象,包含着Http状态码以及相关错误消息)
+         * 3. 通过执行函数控制期约状态
+         */
+        /**
+         * 期约的状态是私有的
+         * 转换转态是通过调用它的两个函数参数实现的
+         * 这两个参数通常命名为resolve 和 reject
+         * resolve会把状态切换为 兑现 resolved
+         * reject 会把状态切换为 拒绝 rejected
+         */
+        /**
+         * 执行器 是同步执行的  !!!
+         */
+        new Promise(() => console.log('executor'));
+        console.log(1123)
+        console.log('Promise', 'init');
+    </script>
+    <script>
+        /**
+         * let p = new Promise((resolve,reject)=>{
+         *  resolve();
+         *  reject(); // 没有效果
+         * })
+         */
+    </script>
+    <script>
+        /**
+         * 为避免期约卡在待定状态
+         * 可以添加一个定时退出功能
+         * 比如,可以童工setTimeout 设置一个 10秒后无论如何 都拒绝期约的回调
+         * 
+         */
+        let p = new Promise((resolve, reject) => {
+            setTimeout(() => {
+                reject()
+            }, 10000);
+        });
+        console.log(p)
+        console.log(
+                setTimeout(() => {
+                    console.log(p)
+                }, 11000)
+            )
+            /**
+             * 
+             * 
+             */
+    </script>
+    <script>
+        /**
+         * Promise.resolve() 静态方法
+         * 会实例化一个兑现的期约
+         * 期约并非一开始就处于待定状态
+         * 
+         */
+        let p1 = new Promise((resolve, reject) => {
+            resolve()
+        });
+        let p2 = Promise.resolve();
+        /**
+         * 实际上 可以把任何值转换为一个期约
+         * 
+         */
+        let p3 = Promise.resolve(console.log('aaa'));
+        let pro = new Promise((resolve) => {
+            console.log(123)
+            resolve('和锋')
+        })
+        console.log('bbb')
+        console.log(p3)
+        let p4 = Promise.resolve(() => {
+            throw 'King must'
+        });
+        Promise.resolve(pro).then((res) => {
+            console.log('返回', res)
+        })
+        console.log('断点')
+        console.log(p4)
+    </script>
+    <script>
+        /**
+         * Promise.resolve() 参数是一个promise,类似于一个空包装
+         * 幂等
+         */
+
+        let p5 = new Promise(() => {})
+        console.log(p5)
+        console.log(Promise.resolve(p5) == p5);
+        console.log(Promise.resolve(new Error('foo')))
+    </script>
+    <script>
+        /**
+         * promise.reject() //静态方法
+         * 会实例化一个拒绝的期约
+         */
+        console.log(Promise.reject());
+    </script>
+    <script>
+        /**
+         * 同步/异步执行的二元性
+         * Promise的设计很大程度上会导致一种完全不同于javaScript
+         * 
+         */
+        try {
+            throw new Error('foo')
+        } catch (e) {
+            console.log(e) // Error: bar
+        }
+        try {
+            Promise.reject(new Error('bar')) //Uncaught (in promise) Error: bar
+        } catch (e) {
+            console.log(e)
+        }
+        /**
+         * reject内部抛出了一个错误
+         */
+    </script>
+</body>
+
+</html>

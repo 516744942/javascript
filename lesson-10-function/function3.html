@@ -90,6 +90,105 @@
          * 私有变量包括函数参数、局部变量、以及函数内部定义的其他函数
          */
     </script>
+    <script>
+        /**
+         * 特权方法(privileged method)
+         * 是能够访问函数私有变量(及其共有方法的函数)
+         * 第一种实现在构造函数中实现
+         */
+        /**
+         * 把所有的私有函数和私有变量都定义在构造函数中
+         * 然后再创建一个能够访问这些私有成员的特权方法
+         * 这样做之所以可行,是因为定义在构造函数中的特权方法其实是一个闭包
+         * 他具有访问构造函数中定义的所有变量和函数的能力
+         */
+        function MyObject() {
+            let privateVariable = 10;
+
+            function privateFunction() {
+                return false;
+            }
+            // 特权方法
+            this.publicMethod = function() {
+                privateVariable++
+                return privateFunction();
+            }
+        }
+        // 使用静态私有变量实现特权方法可以避免这个问题
+        (function() {
+            let privateVariable = 10;
+
+            function privateFunction(params) {
+                return false
+            }
+            MyObject = function() {}
+            MyObject.prototype.publicMethod = function() {
+                privateVariable++
+                return privateFunction()
+            }
+        })()
+        let ob1 = new MyObject()
+        console.dir(MyObject)
+        console.log(ob1.publicMethod());
+    </script>
+
+    <script>
+        /**
+         * 模块模式
+         */
+        /**
+         * 单例模式:就是只有一个实例的读写
+         */
+        let singleton = {
+            name: value,
+            method() {
+
+            }
+        };
+        /**
+         * 模块模式 是在单例对象上加以扩展
+         * 使其通过作用域链来关联私有变量和特权方法
+         * 使其通过作用域链来关联私有变量和特权方法
+         */
+    </script>
+    <script>
+        let singleton1 = function() {
+            //  私有变量和私有函数
+            let privateVariable = 10;
+
+            function privateFunction() {
+                return false
+            }
+            // 特权 / 共有方法和属性
+            return {
+                publicProperty: true,
+                publicMethod() {
+                    privateVariable
+                }
+            };
+        };
+    </script>
+
+    <script>
+        /**
+         * 模块增强模式
+         */
+        let singleton1 = function() {
+            //  私有变量和私有函数
+            let privateVariable = 10;
+
+            function privateFunction() {
+                return false
+            }
+            let object = new CustomType();
+            object.publicMethod = function(params) {
+                privateVariable++
+                return privateFunction()
+            }
+
+            return object
+        };
+    </script>
 </body>
 
 </html>

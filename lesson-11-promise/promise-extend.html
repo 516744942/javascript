@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>期约扩展</title>
+</head>
+
+<body>
+    <button id="start">Start</button>
+    <button id="button">Button</button>
+    <script>
+        /**
+         * 期约的扩展
+         * 取消期约 和进度追踪 
+         */
+        /**
+         * 1 期约取消
+         * 我们经常会遇到期约正在处理过程中,程序却不再需要其结果的情形
+         * 这时如果能够取消期约就好了
+         * 某些第三方库 比如Bluebird,就提供了这个特性,
+         * TC39委员也曾准备增加这个特性
+         * 
+         */
+        /**
+         * 取消令牌(cancel token)
+         * 生成令牌实例提供了一个接口,
+         * 利用这个接口可以取消期约,同时提供了一个期约的实例,
+         * 可以用来出发取消后的操作并求职取消状态
+         * 
+         */
+        // class CancelToken {
+        //     constructor(cancelFn) {
+        //         this.promise = new Promise((resolve, reject) => > {
+        //             cancelFun(resolve)
+        //         })
+        //     }
+        // }
+        /**
+         * 这个类包装了一个期约,把解决方法暴露给了cancel参数
+         * 外部代码就可以向构造函数传入一个函数,从而控制什么情况下可以取消期约
+         * 这里期约是令牌类的公共成员
+         * 因此可以给它添加处理程序已取消期约
+         */
+        class CancelToken {
+            constructor(cancelFn) {
+                this.promise = new Promise((resolve, reject) => {
+                    cancelFun(() => {
+                        setTimeout(() => {
+                            console.log('delay cancelled')
+                        }, 0);
+                        resolve()
+                    })
+                })
+            }
+        }
+        const startButton = document.querySelector('#start')
+        const cancelButton = document.querySelector('#cancel')
+
+        function cancellableDelayedResolve(delay) {
+            setTimeout((e) => {
+                console.log(e)
+            }, 1000);
+        }
+    </script>
+</body>
+
+</html>

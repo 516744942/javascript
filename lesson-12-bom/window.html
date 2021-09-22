@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>window对象</title>
+</head>
+
+<body>
+    <div style="width:4000px;height:3000px">11</div>
+    <button onclick="click1()">moveTo</button>
+    <button onclick="click2()">moveBy</button>
+    <script>
+        /**
+         * 两重身份
+         *  一个是ECMASCript的Global对象
+         * 另一个就是浏览器窗口的JavaScript接口
+         */
+    </script>
+    <script>
+        /**
+         * Globl作用域
+         * Globl对象被复用为ECMAscript的global对象
+         * var 申明的变量会进入全局作用域
+         */
+    </script>
+    <script>
+        /**
+         * 窗口对象
+         * window.top 最上层 
+         * window.parent 上一层
+         * window.self  指向自己
+         */
+        console.log(top)
+        console.log(parent)
+        console.log(self)
+        console.log(self == parent) //true
+        console.log(self === top) // true
+        console.log(parent === top) // true
+    </script>
+    <script>
+        /**
+         * 窗口和位置
+         */
+        console.log(screenLeft)
+        console.log(screenTop)
+
+        function click1() {
+            window.moveTo(0, 100)
+            window.moveTo(200, 300)
+        }
+
+        function click2() {
+            window.moveBy(0, 100)
+            window.moveBy(-50, 100)
+        }
+    </script>
+    <script>
+        /**
+         * 像素比
+         * css 像素是web开发使用的统一像素单位
+         * 有一个角度0.0213度 
+         * 把物理像素(屏幕分辨率)转换成css像素(浏览器报告的虚拟分辨率)
+         */
+        console.log('屏幕像素密', devicePixelRatio)
+    </script>
+    <script>
+        /**
+         * 
+         */
+        console.log(innerHeight === document.documentElement.clientHeight)
+        console.log(innerWidth == document.documentElement.clientWidth)
+        console.log(outerHeight)
+        console.log(outerWidth)
+    </script>
+    <script>
+        /**
+         * 调整窗口大小 可能被禁用
+         * 
+         * window.resizeTo(100,100)
+         * window.resizeBy(100,50)
+         */
+    </script>
+    <script>
+        /**
+         * 视口位置
+         * window.pageXOffset/window.scrollX
+         * window.pageYOffset/window.scrollY
+         * 
+         * window.scrollBy(0,300) //向下滚动300
+         * window.scrollBy(40,0) //向右滚动40
+         * window.scrollTo(0,0) //滚动到
+         * 
+         * 
+         * 平滑滚动 ScrollToOptions
+         */
+        window.scrollTo({
+            left: 100,
+            top: 500,
+            behavior: 'auto' //smooth 平滑
+        })
+    </script>
+</body>
+
+</html>

@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HTML</title>
+</head>
+
+<body>
+    <script>
+        /**
+         * 以往的异步编程模式
+         * 回调地狱
+         */
+        function double(value) {
+            setTimeout(() => {
+                setTimeout(() => {
+                    console.log(value * 3)
+                }, 1000);
+            },  1000);
+        }
+        double(3);
+        /**
+         *  1.异步返回值
+         *  callback
+         *  
+         */
+        function double(value, callback) {
+            setTimeout(() => callback(value * 2), 1000);
+        }
+        double(3, x => console.log(`I was given:${x}`));
+        /**
+         * 这个的setTimeout 调用告诉JavaScript运行在1000毫秒之后
+         * 把一个函数推送到消息队列上
+         * 这个函数会由运行 负责异步调用执行
+         * 
+         */
+        /**
+         * 2.失败处理
+         */
+        function double(value, success, failure) {
+            setTimeout(() => {
+                try {
+                    if (typeof value != 'number') {
+                        throw 'Must provide number as first argument'
+                    }
+                    success(2 * value)
+                } catch (e) {
+                    failure(e)
+                } finally {
+
+                }
+            }, 1000);
+        }
+        const successCallback = x => console.log(`Success ${x}`);
+        const failureCallback = e => console.log(`Failure: ${e}`);
+        double(3, successCallback, failureCallback);
+        double('b', successCallback, failureCallback);
+    </script>
+    <script>
+        /**
+         * 嵌套异步回调
+         */
+        function double2(value, success, failure) {
+            setTimeout(() => {
+                try {
+                    if (typeof value != 'number') {
+                        throw 'Must provide number as first argument'
+                    }
+                    success(2 * value)
+                } catch (e) {
+                    failure(e)
+                } finally {
+
+                }
+            }, 1000);
+        }
+        const successCallback1 = x => {
+            double2(x, (y) => console.log(`$Success11 ${y}`));
+        }
+        double2(3, successCallback1, failureCallback);
+    </script>
+</body>
+
+</html>
