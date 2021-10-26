@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>scroll</title>
+</head>
+
+<body style="height: 5000px;width: 5000px;">
+    <script>
+        /**
+         *   滚动事件
+         *   scroll
+         *   可以通过scrollLeft和scrollTop 属性的变化
+         *   也要做节流
+         */
+        window.addEventListener('scroll', event => {
+            if (document.compatMode = "CSS1Compat") {
+                console.log(document.documentElement.scrollTop)
+                console.log(document.documentElement.scrollLeft)
+            } else {
+                console.log(document.body.scrollTop)
+            }
+        })
+    </script>
+</body>
+
+</html>

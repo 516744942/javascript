@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DOM扩展</title>
+</head>
+
+<body>
+    <div id="hah">1</div>
+    <div class="hah">2</div>
+    <img src="" alt=""></img>
+    <script>
+        /**
+         * selectorsAPI level 1 querySelector和querySelectorAll 
+         * selectorsAPI level 2  Element 增加 matches() find() 和findAll()
+         * 目前没有浏览器宣称实现了find() 和findAll()
+         */
+    </script>
+    <script>
+        /**
+         * querySelector()方法接受css选择符参数 返回匹配的第一恶搞后代元素 如果没有返回null
+         * 
+         */
+        // let body = document.querySelector("body");
+        let body = document.querySelector("body1");
+        let myDivId = document.querySelector("#hah")
+        let myDivClass = document.querySelector(".hah")
+        let myDivTag = document.querySelector("img ")
+        console.log('body', body)
+        console.log('body', myDivId)
+        console.log('body', myDivClass)
+        console.log('body', myDivTag)
+    </script>
+    <script>
+        /**
+         * querySelectorAll() 返回所有的匹配节点
+         * 返回一个 NodeList 静态实例 快照 而不是 实时的
+         * 如果没有返回nodeList空实例
+         */
+        let bodyALl = document.querySelectorAll("body1");
+        console.log('bodyALl', bodyALl)
+    </script>
+
+    <script>
+        /**
+         * matches()方法
+         */
+        console.log(document.body.matches("body")) // true
+    </script>
+
+</body>
+
+</html>

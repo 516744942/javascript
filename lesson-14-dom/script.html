@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DOM编程</title>
+</head>
+
+<body>
+
+    <script>
+        /**
+         * 引入外部文件和直接插入源代码
+         * 动态脚本 
+         */
+        // let script1 = document.createElement('script');
+        // script1.src = "./a.js"
+        // document.body.appendChild(script1)
+
+        // function loadScript(url) {
+        //     let script1 = document.createElement('script');
+        //     script1.src = url
+        //     let code = "function satHi(){alert('hi');}";
+        //     try {
+        //         script1.appendChild(document.createTextNode(code))
+        //     } catch (error) {
+        //         script1.text = code
+        //     }
+        //     document.body.appendChild(script1)
+        // }
+        // loadScript('./a.js');
+    </script>
+    <script>
+        function loadScriptString(code) {
+            let script = document.createElement('script');
+            script.type = "text/javascript";
+            try {
+                script.appendChild(document.createTextNode(code))
+            } catch (e) {
+                script.text = code
+            } finally {}
+            document.body.appendChild(script);
+        }
+        loadScriptString("function satHi(){alert('hi');}");
+        satHi()
+    </script>
+    <script>
+        /**
+         * 通过innerHTML属性创建的 <script>元素永远不会执行 浏览器会尽责地创建<script>元素
+         */
+    </script>
+</body>
+
+</html>

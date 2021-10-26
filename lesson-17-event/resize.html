@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>resize</title>
+</head>
+
+<body>
+    <script>
+        /**
+         * 当浏览器窗口被放到新高度或宽度时,会触发resize事件,
+         * 无论如何,都应该避免在这个事件处理程序中执行过多计算
+         * 否砸可能由于执行过于频繁而导致浏览器相应明确变慢
+         */
+        window.addEventListener('resize', event => {
+            console.log('event', event)
+        })
+    </script>
+
+</body>
+
+</html>

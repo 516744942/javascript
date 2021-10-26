@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Element</title>
+</head>
+
+<body>
+    <div id="myDiv" onclick="change()" style="height:100%" class="bd" title="Body text" lang="en" dir="ltr">123</div>
+    <script>
+        /**
+         * 特点
+         * nodeType 等于 1
+         * nodeValue 值为 null
+         * nodeName 值为元素的标签名 ==tagName
+         * parentNode  值为Document或Element对象
+         * element.tagName.toLowerCase()== "div"
+         */
+    </script>
+
+    <script>
+        /**
+         * id: 元素在文档中的饿唯一标识符
+         * title: 包含元素的额外信息,通常以提示条形式展示
+         * lang: 元素内容的言语代码(很少用)
+         * dir : 言语的书写方向 ("ltr" 从左到右 "rtl")
+         * className，相当于class属性,用于指定元素的css类
+         */
+        let div = document.getElementById('myDiv');
+        console.log('div', div)
+        div.id = "someOtherId"
+        div.dir = "rtl"
+    </script>
+    <script>
+        /**
+         * 取得属性
+         * 3个方法获取DOM相关属性
+         * getAttribute()、setAttribute()和removeAttribute()
+         * getAttribute 不区分大小写
+         * 自定义属性 应该前缀data- 已方便验证 
+         * 公认属性会成为DOM对象的属性
+         * getAttribute 主要用于获取自定义属性
+         */
+        let a = div.getAttribute('class')
+        let a1 = div.getAttribute('xixihah')
+        let a2 = div.getAttribute('style')
+        console.log('a', a) // bd
+        console.log('a', a1) //null
+        console.log('a', a2) //null
+        console.log('className', div.className)
+    </script>
+    <script>
+        /**
+         * DOM对象的style属性用以编程方式读写元素样式
+         * div.getAttribute('style') 返回一个字符串
+         * 而通过DOM对象的属性访问时,返回的是一个CSSStyleDeclaration实例对象
+         */
+        console.log(div.style)
+    </script>
+    <script>
+        function change() {
+            console.log(1)
+        }
+        /**
+         * 事件属性
+         */
+        let eventName = div.getAttribute('onclick')
+        console.log('eventName')
+        console.log('eventName', eventName)
+    </script>
+
+    <script>
+        /**
+         * 设置属性
+         * setAttribute('key':(属性名),value:(属性值))接受两个参数
+         * 规范为小写形式,因此"ID"会变成"id"
+         */
+        div.setAttribute('emm', 'emm')
+            /**
+             * 在DOM对象上添加自定义属性,不会自动让它变成元素的属性
+             */
+        div.myColor = "red";
+        console.log('div', div)
+        console.log('div', div.getAttribute('myColor'))
+    </script>
+    <script>
+        /**
+         * removeAttribute('class')
+         * 移除属性
+         */
+    </script>
+    <script>
+        /**
+         * attributes属性
+         * Element 是唯一使用attributes属性的DOM节点
+         * attributes属性包含一个NamedNodeMap实例 是一个类似nodeList的实时集合
+         * 元素的每个属性都表示为一个Attr节点,并保存在这个NamedNodeMap对象中
+         * getNamedItem 获取
+         * removeNamedItem 移除  返回值是删除的属性节点
+         * setNamedItem 设置一个新的属性
+         * item(pos)  返回索引位置ps处的节点
+         */
+        let id = div.attributes.getNamedItem('id');
+
+        let removeAttr = div.attributes.removeNamedItem('id');
+        var type = document.createAttribute("a");
+        type.nodeValue = "嘻嘻哈哈"
+        let newAttr =
+            div.attributes.setNamedItem(type);
+        let id1 = div.attributes['id'];
+        console.log('id', id.nodeName, id.nodeValue) // nodeName id nodeValue:someOtherId
+        console.log('removeAttr', removeAttr.nodeName, removeAttr.nodeValue) // nodeName id nodeValue:someOtherId
+        console.log('divdiv', div)
+    </script>
+    <script>
+        /**
+         * 元素的创建
+         * document.createElement()方法创建新元素 
+         * 同时也会将其ownerDocument属性设置为document
+         * 
+         */
+        let newNode = document.createElement('div')
+        newNode.id = "new"
+        newNode.className = "haha"
+        console.log('newNode', newNode)
+    </script>
+    <script>
+        /**
+         * 元素的后代
+         */
+        let newNode1 = document.createElement('div')
+        let addDom = `
+          <ul>
+            <li>Item 1</li>
+            <li>Item 2</li>
+            <li>Item 3</li>
+          </ul>
+        `;
+        newNode1.innerHTML = addDom
+            // 7个字元素  3个元素节点  4个文本节点
+        console.log('newNode1', newNode1.childNodes[1].childNodes)
+        console.log('newNode1', newNode1.childNodes[1].getElementsByTagName("li"))
+    </script>
+    <script>
+        /**
+         * document.getElementById('myList')
+         * document.getElementsByTagName('li')
+         */
+    </script>
+</body>
+
+</html>

@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>触摸及手势事件</title>
+</head>
+
+<body>
+    <div ontouchend=change(event)>12312</div>
+    <script>
+        /**
+         * touch
+         * 触摸
+         */
+        /**
+         * touchstart 手指放到屏幕上触发
+         * touchmove  连续移动, 在这个事件中调用了preventDefault()可以阻止滚动
+         * touchend: 手指从屏幕上一开始触发
+         * touchcancel: 手指从屏幕上一开始触发
+         */
+
+        function change(event) {
+            console.log(1, event)
+        }
+    </script>
+    <script>
+        /**
+         * changedTouches集合
+         * 
+         *  touchstart
+         *  mousemove 1次
+         *  mousedown
+         *  mouseup
+         *  click
+         *  touchend
+         */
+    </script>
+    <script>
+        /**
+         * 手势事件
+         * 两个手指触碰屏幕且相对距离或旋转角度变化触发
+         * gesturestart 一个手指放在屏幕上,再把另一个手指放在屏幕上时触发
+         * gesturechange 任何一个手指在屏幕上的位置发生变化时触发
+         * gestureend    其中一个手指离开屏幕时触发
+         * 
+         * 新增两个rotation和scale 属性
+         * rotation 正值表示顺时针
+         * 负值表示逆时针
+         * scale 开始为1  大于1表示放大,小于1表示缩小
+         */
+    </script>
+    <script>
+        /**
+         * 事件
+         */
+    </script>
+</body>
+
+</html>

@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ATTR</title>
+</head>
+
+<body>
+    <div id="element"></div>
+    <script>
+        /**
+         * nodeType 等于2
+         * nodeName 值为属性名
+         * nodeValue 值为属性值
+         * parentNode 值为null
+         * attr对象上有3个属性
+         * name  value  specified 其中name包含属性名(与nodeName一样)
+         */
+    </script>
+    <script>
+        /**
+         * 创建document.createAttribute()
+         */
+        let attr = document.createAttribute('align');
+        attr.value = 1
+        console.log('attr', attr)
+        console.log('attr', attr.name)
+        console.log('attr', attr.value)
+        console.log('attr', attr.specified) //表示属性是使用的是默认值还是被指定的值
+    </script>
+    <script>
+        /**
+         * let 
+         */
+        let element = document.getElementById('element');
+        element.setAttributeNode(attr)
+    </script>
+</body>
+
+</html>

@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>事件类型</title>
+</head>
+
+<body>
+
+    <script>
+        /**
+         * 用户界面事件
+         * 焦点事件
+         * 鼠标事件
+         * 滚动事件
+         * 输入事件
+         * 键盘事件
+         * 合成事件
+         */
+    </script>
+    <script>
+        /**
+         * 用户界面事件
+         * DOMActivate:元素背用户通过鼠标或键盘操作激活时触发
+         * load:在window 上党页面加载完成后触发
+         * unload:在window上当页面完全卸载后触发
+         * abort: 在object元素上党相应对象加载完成被用户提前终止下载时触发
+         * error:window 上当JavaScript报错时触发
+         * select: input或textarea上当用户选择了一个或多个字符串时触发
+         * resize: 在window或窗格上当 窗格被缩放时触发
+         * scroll 滚动时候背触发
+         */
+    </script>
+    <script>
+        /**
+         * load 事件会在整个页面(包含所有外部资源如图片、javaScript和css文件)
+         */
+        window.addEventListener('load', (event) => {
+                console.log(event)
+                console.log(this)
+            })
+            /**
+             * 图片也会触发load事件 目标是img元素
+             * 可以直接从event.target.src属性上取得图片地址并且打印出来
+             * 只要设置了src属性就会立即开始下载
+             * 
+             */
+            /**
+             * 图片预加载
+             */
+        window.addEventListener('load', (event) => {
+                let image = new Image();
+                image.addEventListener("load", (event) => {
+                    console.log('image load')
+                })
+                console.log(11)
+                image.src = "https://gimg2.baidu.com/image_search/src=http%3A%2F%2Fbpic.588ku.com%2Felement_origin_min_pic%2F18%2F08%2F24%2F05dbcc82c8d3bd356e57436be0922357.jpg&refer=http%3A%2F%2Fbpic.588ku.com&app=2002&size=f9999,10000&q=a80&n=0&g=0n&fmt=jpeg?sec=1637306529&t=5ccd2c72f8d78840e69d351bf252364f"
+            })
+            /**
+             * js 加载
+             */
+        window.addEventListener('load', () => {
+                let script = document.createElement('script')
+                script.addEventListener('load', event => {
+                    console.log('script loaded')
+                })
+                script.src = "./load.js"
+                document.body.appendChild(script)
+            })
+            /**
+             *  样式加载
+             */
+        window.addEventListener('load', () => {
+            let link = document.createElement('link')
+            link.type = "text/css"
+            link.rel = "stylesheet"
+            link.addEventListener('load', event => {
+                console.log('css loaded')
+            })
+            link.href = "load.js"
+            document.getElementsByTagName("head")[0].appendChild(link)
+        })
+    </script>
+</body>
+
+</html>

@@ -12,6 +12,7 @@
     <div style="width:4000px;height:3000px">11</div>
     <button onclick="click1()">moveTo</button>
     <button onclick="click2()">moveBy</button>
+    <button onclick="click3()">open</button>
     <script>
         /**
          * 两重身份
@@ -101,6 +102,32 @@
             top: 500,
             behavior: 'auto' //smooth 平滑
         })
+    </script>
+    <script>
+        /**
+         * 导航与打开新窗口
+         * window.open(url,目标窗口,特性字符串,Boole)
+         * 最后一个参数只有不打开新窗口才会使用
+         * 第二个参数frame
+         */
+        let click3 = () => {
+                // window.open('www.baidu.com', 'aaa')
+                // window.open('window.html', '_self')
+                // window.open('window.html', '_parent')
+                let a = window.open('./window.html', '_blank', 'height=100;width=400;Menubar=no;toolbar=no')
+                console.log(a)
+                console.log(a.opener.close())
+                setTimeout(() => {
+                    // console.log(a.opener)
+                }, 1000)
+            }
+            /**
+             * 等同于 
+             * <a target="aaa" href="http://www.worx.com"></a>
+             */
+            /**
+             * 把opener
+             */
     </script>
 </body>
 

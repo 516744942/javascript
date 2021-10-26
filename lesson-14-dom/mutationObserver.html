@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MutationObserver接口</title>
+</head>
+
+<body>
+    <div class="parent">
+        <div class="child"></div>
+    </div>
+    <script>
+        /**
+         * MutationObserver接口
+         * 可以观察整个文档
+         * DOM树的一部分 或某个元素
+         * 还可以观察元素的属性、子节点、文本或者前三者任意组合的变化
+         */
+    </script>
+    <script>
+        /**
+         * 基本用法
+         * MutationObserver的实例要通过调用MutationObserver构造函数并传入一个回调函数来创建
+         * let observer = new MutationObserver(()=>console.log('DOM wa mutated'),mutationObserver)实例
+         */
+    </script>
+    <script>
+        /**
+         * 原型方法
+         * MutationObserver 实例不会关联DOM的任何部分
+         * 需要用observer 与DOM关联起来,需要使用observe()方法
+         * 这个方法接受两个必须的参数(DOM,{}:MutationObserverInit)
+         * 要观察其变化的DOM节点
+         * 以及一个MutationObserverInit对象
+         */
+        let observer = new MutationObserver((mutationRecords) => console.log(mutationRecords.map(x => x.target)))
+        observer.observe(document.body, {
+            attributes: true
+        })
+        console.log('observer', observer)
+        document.body.className = 'foo'
+        document.body.className = 'foo1'
+        document.body.className = 'foo2'
+    </script>
+    <script>
+        /**
+         * attributeNamespace命名空间 变化
+         */
+        document.body.setAttributeNS('baz', 'foo', 'bar')
+    </script>
+    <script>
+        /**
+         * disconnect()方法
+         * 默认情况下,只要背观察的元素不被垃圾回收,MutationObserver的回调就会相应
+         * 不仅会停止从此变化事件的回调,也会抛弃已经加入任务队列的异步执行的回调
+         * 
+         */
+        let childrenA = document.createElement('div');
+        let childrenB = document.createElement('span');
+        document.body.appendChild(childrenA)
+        document.body.appendChild(childrenB)
+        setTimeout(() => {
+            observer.disconnect()
+            document.body.className = 'foo4'
+        });
+        /**
+         * 再次开启
+         */
+        observer.observe(document.body, {
+            attributes: true
+        })
+        console.log('开启')
+        document.body.className = 'foo5'
+    </script>
+    <script>
+        /**
+         * MutationObserverInit 与观察范围 
+         * subtree:Boolean
+         * attributes 布尔值
+         * attributeFilter  字符串数组  表示要观察哪些属性的变化
+         * attributeOldValue  
+         * characterData  布尔值 表示修改字符数据 是否出发变化时间 默认是fasel
+         * characterDataOldValue 布尔值
+         * childList 布尔值 表示修改目标节点的子节点 是否触发变化事件
+         */
+    </script>
+</body>
+
+</html>

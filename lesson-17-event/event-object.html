@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>事件对象</title>
+</head>
+
+<body onclick=goTop(event)>
+    <div onclick=go(event)>
+        <div id="myBtn">123</div>
+    </div>
+    <script>
+        function goTop(event) {
+            console.log('top', event)
+        }
+
+        function go(event) {
+            console.log(event.currentTarget)
+            console.log(event.target)
+        }
+        /**
+         * 所有事件存储在一个名为event的对象中
+         * 
+         */
+        let btn = document.getElementById("myBtn");
+        btn.onclick = function(event) {
+            // event.stopImmediatePropagation() //取消所有的后续事件 捕获或事件冒泡 并且阻止任何后续事件
+            // event.stopPropagation() //取消所有的后续事件 捕获或事件冒泡
+            console.log(event.type)
+            console.log(event)
+            console.log(event.currentTarget == this)
+            console.log(event.target == this)
+            console.log(event.eventPhase)
+                // preventDefault() 取消默认行为
+                // stopImmediatePropagation()
+                // isTrusted() true表示浏览器生成的,false表示事件是由开发者通过JavaScript 创建的 
+                // view() 等于事件所发生的window对象
+                // 
+                // ointerEvent {
+                //     isTrusted: true,
+                //     pointerId: 1,
+                //     width: 1,
+                //     height: 1,
+                //     pressure: 0,
+                //     …
+                // }
+                // altKey: false
+                // altitudeAngle: 1.5707963267948966
+                // azimuthAngle: 0
+                // bubbles: true //  事件是否冒泡
+                // button: 0
+                // buttons: 0
+                // cancelBubble: false // 是否可以取消事件的默认行为
+                // cancelable: true
+                // clientX: 21
+                // clientY: 24
+                // composed: true
+                // ctrlKey: false
+                // currentTarget: <div id="myBtn">123</div>  // 当前元素处理程序所在的元素
+                // defaultPrevented: false  // true表示已经调用 
+                // detail: 1  
+                // eventPhase: 0  // 表示事件处理程序的阶段: 1表示 捕获  2代表到达目标, 2 表示冒泡
+                // fromElement: null
+                // height: 1
+                // isPrimary: false
+                // isTrusted: true
+                // layerX: 21
+                // layerY: 24
+                // metaKey: false
+                // movementX: 0
+                // movementY: 0
+                // offsetX: 13
+                // offsetY: 17
+                // pageX: 21
+                // pageY: 24
+                // path: (5)[div# myBtn, body, html, document, Window]
+                // pointerId: 1
+                // pointerType: "mouse"
+                // pressure: 0
+                // relatedTarget: null
+                // returnValue: true
+                // screenX: -2539
+                // screenY: 103
+                // shiftKey: false
+                // sourceCapabilities: InputDeviceCapabilities {
+                //     firesTouchEvents: false
+                // }
+                // srcElement: div# myBtn
+                // tangentialPressure: 0
+                // target: div# myBtn 事件目标
+                // tiltX: 0 
+                // tiltY: 0
+                // timeStamp: 2246
+                // toElement: null
+                // twist: 0
+                // type: "click"
+                // view: Window { // 等于
+                //     window: Window,
+                //     self: Window,
+                //     document: document,
+                //     name: '',
+                //     location: Location,
+                //     …
+                // }
+                // which: 1
+                // width: 1
+                // x: 21
+                // y: 24
+        }
+        btn.addEventListener("click", () => {
+            console.log(event.type, 1)
+        })
+    </script>
+    <script>
+        /**
+         * DOM事件对象
+         */
+    </script>
+</body>
+
+</html>

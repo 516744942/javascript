@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>模拟事件</title>
+</head>
+
+<body>
+    <div id="myBtn">123</div>
+    <div id="myTextbox">123</div>
+    <script>
+        /**
+         * 任何时候,都可以使用document.createEvent(string)方法创建一个event对象
+         * 触发事件, 使用 dispatchEvent,调用之后,事件就转正了
+         */
+        /**
+         * 1模拟鼠标事件
+         * let eventObj = document.createEvent('MouseEvent')
+         * eventObj.createEvent(
+         *  type,
+         *  bubbles,
+         * cancelable,
+         * view,
+         * detail,
+         * ...  
+         * 
+         * ) 15个参数
+         */
+        let myBtn = document.getElementById('myBtn');
+        let eventObj = document.createEvent('MouseEvent');
+        console.log('document.defaultView', document.defaultView)
+        eventObj.initMouseEvent("click", false, true, document.defaultView)
+        myBtn.dispatchEvent(eventObj)
+        console.log('eventObj', eventObj)
+            // myBtn.onclick = function(e) {
+            //     console.log(e);
+            //     console.log(e.type);
+            //     console.log(e.clientX);
+            //     console.log(e.button);
+            // }
+    </script>
+    <script>
+        /**
+         * 模拟键盘事件
+         */
+        let myTextbox = document.getElementById('myTextbox');
+        let eventObj1 = document.createEvent('keyboardEvent');
+        eventObj1.initKeyboardEvent("keydown", true, true, document.defaultView)
+        myTextbox.dispatchEvent(eventObj1)
+    </script>
+</body>
+
+</html>

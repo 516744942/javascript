@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HTML5</title>
+</head>
+
+<body>
+    <div id="parent">
+        <div id="inject">
+        </div>
+    </div>
+    <input style="height:700px" type="text" focus name="" id="myInput">
+    <div style="height:700px" id="myDiv" data-appId="12345" data-my-name1="aaa" data-myName="Nicholas">123</div>
+    <div style="height:700px" id="myDiv2" data-appId="12345" data-my-name1="aaa" data-myName="Nicholas">123</div>
+    <script>
+        /**
+         * css类扩展
+         * class属性越来越多
+         * 为了添加样式以及语意信息
+         * 1 getElementByClassName() 返回NodeList
+         */
+        /**
+         * 2 classList属性 值是字符串
+         * let targetClass ="user" 
+         * let classNames = div.className.split(/\s+/) 变成数组
+         * let idx = className.indexOf(targetClass)  查找要删除的索引
+         * if(idx>-1){
+             class.splice(i,1)
+         }
+         *  div.className = className.join("")  重新设置类名
+         */
+    </script>
+    <script>
+        /**
+         * classList 是一个新的集合类型DOMTokenList 这就是从div元素
+         *  add(value) 添加
+         *  contains(value)包含
+         *  remove(value) 移出 
+         *  toggle(value)没有就添加 有就删除
+         */
+    </script>
+
+    <script>
+        /**
+         * 焦点管理
+         * document.activeElement 
+         * 而在页面完全家在之前,document.activeElement 为 null
+         */
+        console.log('document.activeElement ', document.activeElement)
+        let div = document.getElementById('myInput')
+            // console.log('div', div, div.hasFocus())
+        div.focus() // 元素获取焦点
+        console.log('div', document.hasFocus()) //文档是否有焦点
+    </script>
+
+    <script>
+        /**
+         * HTMLDocuemnt 扩展
+         * 1 document.readyState 属性
+         * loading,表示文档正在加载
+         * complete 表示文档加载完成
+         * 
+         */
+        /**
+         * document.compatMode 兼容属性
+         * 标准模式 CSS1Compat
+         * 混杂模式下 BackCompat
+         */
+        /**
+         * head 属性
+         */
+        let head = document.head;
+        console.log('head', head)
+    </script>
+    <script>
+        /**
+         * 字符集属性
+         * characterSet 字符集 //默认 UTF-16
+         * 
+         */
+        console.log(document.characterSet) // UTF-8
+    </script>
+    <script>
+        /**
+         * 自定义数据属性
+         * data-告诉浏览器
+         * 可以通过dataset 属性来访问  是一个DOMStringMap 实例
+         * data-my-name 为 myName
+         * data-myName 为 myname
+         * 作用,链接追踪和在聚合应用程序中标识页面的不同部分
+         */
+        let dom1 = document.getElementById('myDiv');
+        console.log('dom1 dataset', dom1.dataset) //DOMStringMap {appid: '12345', myname: 'Nicholas'}
+        console.log('dom1 dataset', dom1.dataset.appid) //DOMStringMap {appid: '12345', myname: 'Nicholas'}
+    </script>
+
+    <script>
+        /**
+         * 插入标记
+         * 一次添加大量HTML
+         * innerHTML 属性 返回 元素后代的HTML字符串
+         * innerHTML 插入 script标签是不会执行的
+         */
+    </script>
+    <script>
+        /**
+         * outerHTML 属性
+         * 会返回带哦用它的元素(及所有后代元素)的HTML字符串
+         * 
+         */
+    </script>
+    <script>
+        /**
+         *  insertAdjacentHTML(位置,HTML)与insertAdjacentText(位置,文本)  插入相邻节点和文本
+         *  1 第一个参数的值(不区分大小写)
+         *  beforebegin  元素前面 作为前一个同胞节点
+         *  afterbegin   插入当前元素内部  第一个子节点前面
+         *  beforeend    插入当前元素内部  放在最后一个节点
+         *  afterend     插入当前元素后面  作为下一个同胞节点
+         */
+        dom1.insertAdjacentHTML('beforebegin', "<p>11</p>")
+        dom1.insertAdjacentHTML('afterbegin', "<p>22</p>")
+        dom1.insertAdjacentHTML('beforeend', "<p>33</p>")
+        dom1.insertAdjacentHTML('afterend', "<p>44</p>")
+    </script>
+    <script>
+        /**
+         *  内存与性能问题
+         *  在替换元素关联事件处理程序前要删除JavaScript对象
+         *  
+         */
+    </script>
+    <script>
+        /**
+         * scrollIntoView(
+         * alignToTop:true|false, 默认是true
+         * 或者下面
+         * scrollIntoViewOptions:{
+         *    behavior:"smooth"|"auto", 默认是auto
+         *    block:"start"|"center"|"end"|"nearest" //默认是nearest 垂直方向对齐
+         *    inline:"start"|"center"|"end"|"nearest" //默认是nearest 垂直方向对齐
+         * })
+         * 滚动页面中的某个区域
+         */
+    </script>
+
+    <script>
+        /**
+         * children 属性
+         * 如果 子元素都是元素类型 那么 children和childNodes 是一样的
+         */
+        console.log(document.body.children) //HTMLCollection
+        console.log(document.body.childNodes) //nodeList
+    </script>
+    <script>
+        /**
+         * contains
+         * 一个元素是不是 另一个元素的后代
+         * 在祖先元素上调用,参数待确定的目标节点
+         * compareDocumentPosition(DOM1,DOM2) 位置
+         */
+        let domP = document.getElementById('parent');
+        let domI = document.getElementById('inject');
+        console.log(domP.contains(domI))
+    </script>
+    <script>
+        /**
+         * 插入标记
+         * innerText()
+         * outerText()
+         */
+    </script>
+</body>
+
+</html>

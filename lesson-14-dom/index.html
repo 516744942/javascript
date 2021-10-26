@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+
+<body>
+    <div id="app0">
+        111
+    </div>
+    <div id="app">
+        <app class="abc xixihaha">第一个</app>
+        222
+    </div>
+    <div id="app3">
+        333
+    </div>
+    <div id="app4">
+        444
+        <div>123</div>
+    </div>
+    <script>
+        /**
+         * NodeList.firstChild 第一个
+         * NodeList.lastChild  最后一个
+         * NodeList.hasChildNodes 是否有子节点
+         * NodeList.childNodes  所有的子节点
+         * NodeList.firstChild.nodeName  文本 #text  元素 DIV 表情名字
+         * 
+         */
+        let a = document.getElementById('app');
+        console.log(a.ownerDocument) //文档指针
+        console.log(a.childNodes) // 第一个字节点
+        console.log(a.firstChild) // 第一个字节点
+        console.log('firstChild', a.firstChild.nodeName) // 第一个元素名字
+        console.log('firstChild', a.firstChild.nodeType) // 第一个元素类型
+        console.log(a.hasChildNodes()) //是否有子节点
+        console.log(a.nodeName) //DIV
+        console.log(a.previousSibling) //DIV
+        console.log(a.nextSibling) //DIV
+        console.log(a.childNodes.item(1)) //null
+        console.log(a.childNodes[0].nodeType) //3
+        console.log(a.childNodes[0].nodeName) //#text
+    </script>
+    <script>
+        /**
+         * 操纵节点
+         * 添加
+         */
+        let a1 = document.getElementById('app');
+        let newDom = document.createElement('div');
+        newDom.innerHTML = "<div>内部数据</div>"
+        console.log('newDom', newDom);
+        a1.appendChild(newDom)
+    </script>
+
+    <script>
+        /**
+         * 特定的位置可以 使用
+         * insertBefore(插入节点,参考节点)
+         * 如果参考接节点是null innerBefore和appendChild()效果相同
+         */
+        let a3 = document.getElementById('app3');
+        let newDom1 = document.createElement('div');
+        newDom1.innerHTML = "<div>没有参考节点</div>"
+        a3.insertBefore(newDom1, null)
+    </script>
+    <script>
+        let a4 = document.getElementById('app3');
+        console.log('a4.firstChild', a4.firstChild)
+        let newDom2 = document.createElement('div');
+        newDom2.innerHTML = "<div>有参考节点</div>"
+        a4.insertBefore(newDom2, a4.firstChild)
+    </script>
+    <script>
+        /**
+         * 替换
+         */
+        let a5 = document.getElementById('app0');
+        console.log('a5.firstChild', a5.firstChild)
+        let newDom3 = document.createElement('div');
+        newDom3.innerHTML = "<div>替换节点</div>"
+        a5.replaceChild(newDom3, a5.firstChild)
+    </script>
+    <script>
+        /**
+         * 删除
+         */
+        let a6 = document.getElementById('app4');
+        a6.removeChild(a6.lastChild)
+    </script>
+
+    <script>
+        /**
+         * 其他方法 
+         * cloneNode(Boolean) 会返回与调用它的节点一摸一样的节点 表示是否深层复制
+         * 
+         * 
+         */
+        let dom = `
+            <li>1</li>
+            <li>2</li>
+            <li>3</li>
+           `
+        let myList = document.createElement('ul')
+        myList.innerHTML = dom;
+        let deepCloneMyList = myList.cloneNode(true)
+        let shallowCloneMyList = myList.cloneNode(false)
+        console.log('深', deepCloneMyList.childNodes.length, deepCloneMyList)
+        console.log('浅', shallowCloneMyList.childNodes.length, shallowCloneMyList)
+    </script>
+    <script>
+        /**
+         * normalize(),唯一的任务就是处理文档子树中的文本节点
+         * 由于解析器实现的差异或DOM操作等原因,可能会出现并不包含文本的节点
+         */
+        let as = ` 
+            <li>1</li>
+            <li>2</li>
+            <li>3</li>
+           `
+        let myList1 = document.createElement('ul')
+        myList1.innerHTML = as;
+        myList1.normalize()
+        console.log('myList1', myList1.childNodes)
+        console.log('myList1实例', myList1.__proto__.constructor.name) //HTMLUListElement
+    </script>
+    <script>
+        /**
+         * takeRecords()方法
+         * 可以清空队列记录,返回所有的MutationRecord实例
+         */
+    </script>
+</body>
+
+</html>

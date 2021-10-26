@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>comment类型</title>
+</head>
+
+<body>
+    <div id="comment">
+        <!-- 洗哈哈 -->
+    </div>
+    <ul id="myList">
+
+    </ul>
+    <script>
+        /**
+         * DOM中的注视通过Comment类型表示
+         * nodeType 8
+         * nodeName #comment
+         * nodeValue 值为注释的内容
+         * parentNode 值为Document 或Element对象
+         * 
+         */
+        /**
+         * 个Text类 继承同一个基类(CharacterData)
+         */
+        let commentD = document.getElementById('comment')
+        console.log(commentD.childNodes[1])
+        console.log(commentD.childNodes[1].nodeType)
+        console.log(commentD.childNodes[1].nodeValue)
+        console.log(commentD.childNodes[1].nodeName)
+    </script>
+    <script>
+        /**
+         * documentFragment类型
+         * nodeType 为11
+         * node-name 值为 #document-fragment
+         * nodeValue 值为null
+         * 
+         */
+        let fragment = document.createDocumentFragment();
+        let ul = document.getElementById('myList')
+        for (let i = 0; i < 3; i++) {
+            let li = document.createElement('li');
+            li.appendChild(document.createTextNode(`Item${i+i}`))
+            fragment.appendChild(li)
+        }
+        ul.appendChild(fragment)
+            /**
+             * 
+             */
+    </script>
+</body>
+
+</html>

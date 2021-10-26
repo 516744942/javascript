@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>事件委托</title>
+</head>
+
+<body>
+    <ul id="myLinks">
+        <li id="li1">li1</li>
+        <li id="li2">li2</li>
+        <li id="li3">li3</li>
+    </ul>
+    <div id="myDiv">
+        <button id="button1">123</button>
+    </div>
+    <script>
+        /**
+         * 为了提升内存与改善性能
+         *  过多事件处理程序的解决方案:事件委托
+         *  事件委托 利用了事件冒泡
+         *  事件冒泡到document,这意味着可以为整个页面指定一个onclick事件处理程序
+         */
+    </script>
+    <script>
+        /**
+         *  优点 
+         * document对象随时可用 任何时候给它添加事件处理程序
+         * 节省花在设置页面事件处理程序上的时间,
+         * 减少整个页面所需要的内存,提升整体性能
+         * 
+         */
+        let list = document.getElementById('myLinks');
+        list.addEventListener('click', (event) => {
+            console.log(event)
+            console.log(event.target)
+            console.log(event.target.id)
+        })
+    </script>
+    <script>
+        /**
+         * 删除事件处理程序
+         * 1.删除带有事件的处理的程序 removeChild()和replaceChild()删除节点
+         * 2.使用innerHTML整体替换页面的某一部分
+         * 另一个可能导致内存中残留饮用的问题是页面卸载
+         */
+        /**
+         * 保证内存被回收
+         * 删除的事件会阻止事件冒泡 记得在页面onload事件中删除
+         * 在onload事件处理程序汇总做了什么,在好在onunload事件处理中恢复
+         */
+        let button1 = document.getElementById('button1');
+        button1.onclick = function() {
+            button1.onclick = null;
+            document.getElementById('myDiv').innerHTML = "processing";
+        }
+    </script>
+</body>
+
+</html>

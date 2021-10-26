@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>样式</title>
+    <link rel="stylesheet" href="./a.css">
+</head>
+<style>
+    .haha {
+        background: rebeccapurple;
+    }
+</style>
+
+<body>
+    <div class="haha" id="idv" style="height:20px;">1</div>
+    <script>
+        /**
+         * 外部样式表 通过link元素
+         * 文档样式表 使用<style>元素
+         * 元素特定样式 使用style属性
+         */
+    </script>
+    <script>
+        /**
+         * HTML元素在javaScript中都会有一个对应的style属性
+         * 这个属性是cssStyleDeclaration类型的实例
+         * 
+         */
+    </script>
+    <script>
+        /**
+         * cssText 包含style中的css代码
+         * length 应用给元素的css属性数量
+         * parentRule,表示css信息的CSSRule对象
+         * getPropertyValue(propertyName)
+         */
+        const div = document.getElementById('idv')
+        console.log(div.style.length)
+        console.log(div.style.getPropertyValue('height'))
+        console.log(div.style.removeProperty('height'))
+    </script>
+
+    <script>
+        /**
+         * 计算样式
+         *  返回css属性的值的字符串表示 
+         * document.defaultView上增加了getComputedStyle(元素和伪元素:after,null)方法 不需要伪元素第二个参数传null
+         */
+        console.log(div.defaultView.getComputedStyle)
+    </script>
+    <script>
+        /**
+         * 操作样式表
+         * stylesheet
+         */
+        console.log('d', div.stylesheet)
+    </script>
+    <script>
+        /**
+         * 客户端尺寸 clientWidth
+         * 客户端尺寸 clientHieght+boder  =offsetWidth
+         */
+    </script>
+    <script>
+        /**
+         *  滚动尺寸
+         *  scrollHeight 没有滚动条出现时,元素内容的总宽度
+         *  scrollLeft   内容左侧隐藏的像素数,
+         *  scrollTop    内容顶部隐藏的像素数
+         *  scrollHeight  没有滚动条出现时,元素内容的总高度
+         */
+    </script>
+    <script>
+        /**
+         * 确定元素尺寸
+         * getBoundingClientRect()
+         */
+    </script>
+    <script>
+        /**
+         * 遍历
+         * NodeIterator 创建实例 
+         * document.createNodeIterator(
+         * root, 作为便利跟节点的节点
+         * whatToShow, 数值代码,表示应该访问那些节点
+         * filter(NodeFilter对象或函数),表示 是否接受或跳过特定节点
+         * entityReferenceExpansion, 布尔值,表示是否扩展实体引用
+         * )
+         * 
+         */
+        let aIteraor = document.createNodeIterator(document)
+        console.log(aIteraor)
+    </script>
+</body>
+
+</html>

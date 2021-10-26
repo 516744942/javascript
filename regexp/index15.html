@@ -18,7 +18,8 @@
 <script>
     let hf = '王和锋wanghefeng2021.,水电费!';
     let reg = /\w/g
-    console.log(reg.lastIndex)
+    console.log(reg.exec(hf))
+
     let result1 = hf.match(reg.exec(hf));
     console.log(reg.lastIndex)
     let result2 = hf.match(reg.exec(hf));

@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Text</title>
+</head>
+
+<body>
+    <div id="name">123</div>
+    <div id="add"></div>
+    <script>
+        /**
+         * Text类型
+         * nodeType 等于3
+         * nodeName 值为#text
+         * nodeValue 值为节点中包含的文本
+         * parentNode 值为Element对象
+         * 不支持自节点
+         */
+        /**
+         * appendData(text),向节点末尾添加文本 text
+         * deleteData(offset,count) 从位置offset开始删除 count个字符
+         * insertData(offset,text)  在位置offset插入 text 
+         * replaceData(offset,count,text) 在位置offset插入text
+         * splitText(offset) 在位置offset插入text
+         * substringData(offset,count), 提取从位置 offset到offset+count的文本
+         */
+    </script>
+    <script>
+        /**
+         * 
+         */
+        let textValue = document.getElementById('name').childNodes[0]
+        console.log('textValue', textValue)
+        textValue.appendData('添加字符串')
+        textValue.deleteData(2, 3)
+        textValue.insertData(2, "插入")
+        textValue.replaceData(0, 0, "插入second")
+        textValue.splitText(5)
+        textValue.substringData(3, 4)
+        console.log(document.getElementById('name'))
+    </script>
+    <script>
+        /**
+         * 创建文本节点
+         * createTextNode
+         * 创建文本之后 其ownerDocument属性就会被设置为document
+         */
+        let textValue1 = document.getElementById('add')
+        textNode = document.createTextNode("<strong>hello</strong> word")
+        textNode1 = document.createTextNode("<strong>hello</strong> word")
+        console.log('textNode', textNode)
+        textValue1.appendChild(textNode)
+        textValue1.appendChild(textNode1)
+        textValue1.normalize()
+            /**
+             * 同胞文本节点只会出现在DOM脚本的文档树中
+             */
+    </script>
+    <script>
+        /**
+         * 　合并两个相邻的文本节点
+         *   normalize() 和 splitText()相反
+         */
+    </script>
+</body>
+
+</html>

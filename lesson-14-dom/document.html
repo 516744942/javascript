@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+
+<body>
+    <div name="haha"> 你好</div>
+    <a href="http://" name>222</a>
+    <a href="http://baidu.com">1</a>
+    <a href="http://">2</a>
+    <a href="http://">3</a>
+    <img src="123" alt="12" name="myImage">
+    <img src="123" alt="34">
+    <script>
+        /**
+         * Document类型
+         * document是 HTMLDocument的实例 
+         * document 是window对象的属性 
+         * 
+         */
+        /**
+         * 特点
+         * nodeType 等于9 
+         * nodeName 值为#document
+         * nodeValue 值为null
+         * parentNode 值为null
+         * ownerDocument 值为 null
+         */
+    </script>
+    <script>
+        let a = document;
+        console.log(a.nodeType) // 9
+        console.log(a.nodeName) // #document
+        console.log(a.nodeValue) // null
+        console.log(a.parentNode) // null
+        console.log(a.ownerDocument) // null
+    </script>
+    <script>
+        /**
+         * 访问子子节点的方式
+         * documentElement 
+         */
+        let html = document.documentElement
+        console.log(html) // 始终指向HTML页面中的 <html>元素
+        console.log(document.childNodes[1] == html); // 始终指向HTML页面中的 <html>元素
+    </script>
+    <script>
+        /**
+         * body 开发者使用最多的元素 body属性
+         * 
+         */
+        let body = document.body;
+        console.log('body', body)
+        console.log('body', body.nodeType) //1
+    </script>
+    <script>
+        /**
+         * 文档的信息
+         * title  标题
+         * URL    
+         * domain 
+         * referrer 
+         * 
+         */
+        let originalTitle = document.title;
+        console.log('originalTitle', originalTitle)
+        document.title = "你好"
+        let {
+            URL, //地址
+            domain, //域名域名 // 只有这个可以设置 并且只能子域名
+            referrer //来源
+        } = document
+        console.log(URL)
+        console.log(domain)
+        console.log(referrer);
+    </script>
+    <script>
+        /**
+         * 某个不同子域名的窗格(frame)或 内嵌窗格(iframe)
+         * 设置 document.domain 因为跨域通讯承载安全隐患
+         * 所以不同子域的页面见无法通过JavaScript通信
+         * 一个域名是 p2p.wrox.com 一个是www.wrox.com内嵌窗格
+         * 两个页面都把document.domain  设置为wrox.com 那两个页面之间就可以通信了
+         * 浏览器对domain属性还有一个限制,即这个属性一单放松就不能再收紧。比如把  document.domain ='wrox.com'就不能再设置回去
+         * 
+         */
+    </script>
+    <script>
+        /**
+         * 定位元素
+         * 
+         */
+        document.getElementById('id') // 页面中存在多个id 则取第一个
+        document.getElementsByClassName('ima') //返回0个或者多个元素的NodeList
+        let htmlCollection = document.getElementsByTagName('img')
+        console.log(htmlCollection.namedItem('myImage'))
+        let buttonName = document.getElementsByName('haha');
+        console.log('buttonName', buttonName)
+    </script>
+    <script>
+        /**
+         * 特殊集合
+         * 
+         */
+        let aList = document.anchors; // 带有name<a>锚点
+        let images = document.images; //锚点
+        let linksList = document.links; // 带有href的<a>
+        console.log('aList', aList)
+        console.log('images', images)
+        console.log('linksList', linksList)
+    </script>
+    <script>
+        /**
+         * 文档写入
+         * write() 简单的文本
+         * writeln() 简单文本 还会在字符串末尾追加一个换行符
+         * open() 打开 网页输出流
+         * close() 关闭网页输出流
+         */
+        document.write("<sctipt type=\"text/javascript\" src=\"file.js\">" + "<\/script>")
+    </script>
+
+    <script>
+        /**
+         * 如果在页面加载完成之后再调用document.write() 则输出的内容会重写整个页面
+         * 
+         */
+        // window.onload = function() {
+        //     document.write("hello world")
+        // }
+    </script>
+    <script>
+        // document.open('www.baidu.com')
+        document.open();
+        document.write("<p>Hello world!</p>");
+        document.write("<p>I am a fish</p>");
+        document.write("<p>The number is 42</p>");
+        // document.close();
+    </script>
+</body>
+
+</html>

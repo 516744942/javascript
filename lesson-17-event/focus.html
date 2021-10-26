@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>焦点事件</title>
+</head>
+
+<body>
+
+    <script>
+        /**
+         * 焦点事件在页面元素获取或失去焦点时触发
+         * 这些事件可以与document.hasFocus()和document.activeElement
+         */
+    </script>
+    <script>
+        /**
+         * blur 当元素市区焦点时触发,这个事件不冒泡
+         * DOMFocusIn(推荐使用focusIn): 获取焦点时候出发,这个事件是focus的冒泡版
+         * DOMFocusOut(推荐使用focusOut): 获取焦点时候出发,这个事件是blur的通用版
+         * focus
+         */
+        let a = document.hasFocus()
+        let b = document.activeElement
+        console.log(a, b);
+    </script>
+</body>
+
+</html>

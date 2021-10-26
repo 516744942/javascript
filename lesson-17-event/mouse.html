@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>鼠标和滚轮事件</title>
+</head>
+
+<body>
+    <div style="height:5000px" onmouseover=mouseover1() onmouseout=mouseout1() onmouseenter=mouseenter1() onmouseleave=mouseleave1() onclick=click1(event) onmouseup=mouseup1() onmousedown=mousedown1() ondblclick=dbclick1()>111</div>
+    <div style="height:200px" id="position" onclick="position">位置</div>
+    <script>
+        /**
+         * 鼠标和滚轮事件
+         */
+        /** 
+         * click 鼠标 单击
+         * dbclick  鼠标双击
+         * mousedown 鼠标任意按键
+         * mouseenter 鼠标从元素外部到内部 不冒泡
+         * mouseleave 鼠标从元素内部到外部 不冒泡
+         * mousemove  在鼠标在元素上反复移动时出发
+         * mouseout   光标从一个元素移到另一个元素上时触发
+         * mouseover   光标从元素外部一到元素内部时触发
+         * mouseup   在用户释放鼠标键时触发
+         */
+        function mouseover1() {
+            console.log('mouseover1')
+        }
+
+        function mouseout1() {
+            console.log('mouseout1')
+        }
+
+        function mousedown1() {
+            console.log('mousedown1')
+        }
+
+        function mousemove1() {
+            console.log('mousemove1')
+        }
+
+        function mouseup1() {
+            console.log('mouseup1')
+        }
+
+        function click1(event) {
+            console.log('click1')
+            console.log('click1', event)
+            console.log('click1', event.detail)
+        }
+
+        function dbclick1(event) {
+            console.log('dbclick1', event)
+            console.log('dbclick1', event.detail)
+        }
+
+        function mouseenter1() {
+            console.log('mouseenter1')
+        }
+
+        function mouseleave1() {
+            console.log('mouseleave1')
+        }
+    </script>
+    <script>
+        /**
+         * 顺序
+         * mousedown
+         * mouseup
+         * click
+         * mousedown
+         * mouseup
+         * click
+         * dbclick 
+         */
+    </script>
+    <script>
+        /**
+         * 滚轮事件 mouseWheel
+         * 
+         */
+    </script>
+    <script>
+        /**
+         * 客户端坐标
+         * clientX 和clientY
+         */
+        document.addEventListener('click', event => {
+                // console.log(event.target)
+                console.log(event.clientX)
+                console.log(event.clientY)
+            })
+            // let dom = document.getElementById('position')
+            // dom.addEventListener('click', function(event) {
+            //     console.log(event)
+            //     console.log(event.target)
+            //         // console.log(event.clientX)
+            //         // console.log(event.clientY)
+            // })
+    </script>
+    <script>
+        /**
+         * 页面坐标
+         * pageX
+         * pageY 
+         * 没有滚动的时候  pageX==clientX pageY==clientY
+         */
+        document.addEventListener('click', event => {
+            console.log(event.pageX)
+            console.log(event.pageY)
+                // console.log(event.clientX)
+                // console.log(event.clientY)
+        })
+    </script>
+    <script>
+        /**
+         * 屏幕坐标
+         */
+        document.addEventListener('click', event => {
+            console.log(event.screenX)
+            console.log(event.screenY)
+                // console.log(event.clientX)
+                // console.log(event.clientY)
+        })
+    </script>
+    <script>
+        /**
+         * 修饰键
+         * shift、ctrl、alt 和Meta 经常用于修改鼠标事件行为
+         * shiftKey、ctrlKey、altKey 和metaKey
+         * 
+         */
+        let dom = document.getElementById('position')
+        dom.addEventListener('click', function(event) {
+            let keys = new Array();
+            if (event.shiftKey) {
+                keys.push("shift")
+            }
+            console.log(event)
+            if (event.ctrlKey) {
+                keys.push("ctrlKey")
+            }
+            if (event.altKey) {
+                keys.push("altKey")
+            }
+            if (event.metaKey) {
+                keys.push("metaKey")
+            }
+            console.log('metaKey', keys)
+        })
+    </script>
+
+    <script>
+        /**
+         * 鼠标按键
+         * event上有个button属性
+         * 0表示主键
+         * 1表示鼠标中键
+         * 2表示鼠标副键
+         */
+    </script>
+    <script>
+        /**
+         * 额外事件信息
+         * event上 提供了detail属性
+         * 以给出关于事件的更多信息,
+         * 对鼠标事件来说,detail包含一个数值
+         * 表示在给定位位置上发生了多少次单击,
+         * 单击相当于在同一个像素上发生一次mousedown紧跟一次mouseup
+         */
+    </script>
+
+    <script>
+        /**
+         * offsetX 光标相对目标元素边界的X坐标
+         * offsetY 光标相对目标元素边界的y坐标
+         */
+    </script>
+    <script>
+        /**
+         * mousewheel 事件
+         * 这个事件可以在任何元素上触发,并且冒泡到document和window
+         * 此外还有一个wheelDelta的新属性 每次+120 和-120
+         */
+        document.addEventListener('wheel', event => {
+            console.log(event)
+            console.log(event.wheelDelta)
+        })
+    </script>
+</body>
+
+</html>
